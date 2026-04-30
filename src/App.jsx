@@ -101,6 +101,10 @@ function App() {
                 <MessageCircle /> WhatsApp
               </a>
             </div>
+            
+            <div style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)', color: '#a0a0a0', fontSize: '1rem' }}>
+              &copy; {new Date().getFullYear()} Ashiq Muhammed M. All Rights Reserved.
+            </div>
           </div>
         </section>
       </motion.main>
