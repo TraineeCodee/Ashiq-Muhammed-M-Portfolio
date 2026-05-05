@@ -43,13 +43,20 @@ const Showcase = () => {
         }}
       >
         {/* Card 1 */}
-        <motion.div variants={itemVariants} className="glass" style={{ padding: '3rem' }}>
+        <motion.a 
+          href="https://trainee-code.itch.io/" 
+          target="_blank" 
+          rel="noreferrer"
+          variants={itemVariants} 
+          className="glass" 
+          style={{ padding: '3rem', display: 'block', textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
+        >
           <Gamepad2 size={50} color="#00FFFF" style={{ marginBottom: '2rem' }} />
           <h3 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Game Dev Portfolio</h3>
           <p style={{ color: '#a0a0a0', fontSize: '1.2rem', lineHeight: 1.6 }}>
             A collection of physics-based mechanics, level designs, and interactive prototypes built in Unity.
           </p>
-        </motion.div>
+        </motion.a>
 
         {/* Card 2 */}
         <motion.div variants={itemVariants} className="glass" style={{ padding: '3rem' }}>

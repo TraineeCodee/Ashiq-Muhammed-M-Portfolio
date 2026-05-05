@@ -4,24 +4,30 @@ import { Briefcase } from 'lucide-react';
 
 const experiences = [
   {
-    role: "uPlay & Game Dev IG Lead",
+    role: "µPlay & Game Dev IG Lead",
     company: "MuLearn Foundation · Internship",
     date: "Jul 2025 - Present",
+    duration: "11 mos",
+    location: "Hybrid",
   },
   {
     role: "Operations Team Member",
     company: "Google Developer Groups on Campus - Mar Baselios College of Engineering and Technology",
     date: "Nov 2025 - Present",
+    duration: "7 mos",
   },
   {
     role: "MuPlay IG Lead",
     company: "Catalyst - Mar Baselios IEDC",
     date: "Jan 2026 - Present",
+    duration: "5 mos",
   },
   {
     role: "Media team",
     company: "NSS MBCET",
     date: "Sep 2025 - Present",
+    duration: "9 mos",
+    skills: "Design and Figma (Software)"
   }
 ];
 
@@ -74,8 +80,14 @@ const Experience = () => {
             </div>
             <div>
               <h3 style={{ fontSize: '1.6rem', marginBottom: '0.5rem', color: '#ffffff' }}>{exp.role}</h3>
-              <p style={{ fontSize: '1.1rem', color: '#a0a0a0', marginBottom: '0.5rem' }}>{exp.company}</p>
-              <p style={{ fontSize: '0.9rem', color: index % 2 === 0 ? "#00FFFF" : "#FF00FF", fontWeight: 600 }}>{exp.date}</p>
+              <p style={{ fontSize: '1.1rem', color: '#a0a0a0', marginBottom: '0.2rem' }}>{exp.company}</p>
+              <p style={{ fontSize: '0.9rem', color: index % 2 === 0 ? "#00FFFF" : "#FF00FF", fontWeight: 600, marginBottom: (exp.location || exp.skills) ? '0.5rem' : '0' }}>
+                {exp.date} {exp.duration && `· ${exp.duration}`}
+              </p>
+              {exp.location && <p style={{ fontSize: '0.9rem', color: '#888', marginBottom: '0.2rem' }}>{exp.location}</p>}
+              {exp.skills && <p style={{ fontSize: '0.9rem', color: '#ccc', marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ fontSize: '1.1rem' }}>💎</span> {exp.skills}
+              </p>}
             </div>
           </motion.div>
         ))}

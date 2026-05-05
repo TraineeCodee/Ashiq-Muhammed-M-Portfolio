@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 
-const frameCount = 240;
+const frameCount = 96;
 const currentFrame = (index) => `/images/herosection/ezgif-frame-${index.toString().padStart(3, '0')}.png`;
 
 const Hero = () => {
@@ -15,6 +15,17 @@ const Hero = () => {
     for (let i = 1; i <= frameCount; i++) {
       const img = new Image();
       img.src = currentFrame(i);
+      img.onload = () => {
+        // If this image is the one that should currently be displayed, draw it!
+        const currentProgress = scrollYProgress ? scrollYProgress.get() : 0;
+        const expectedIndex = Math.min(frameCount - 1, Math.floor(currentProgress * frameCount));
+        if (i - 1 === expectedIndex) {
+           requestAnimationFrame(() => {
+             const drawn = drawImage(img);
+             if (drawn) lastDrawnIndexRef.current = expectedIndex;
+           });
+        }
+      };
       loadedImages.push(img);
     }
     setImages(loadedImages);
@@ -27,7 +38,7 @@ const Hero = () => {
 
   const drawImage = (img) => {
     const canvas = canvasRef.current;
-    if (!canvas || !img || !img.complete) return;
+    if (!canvas || !img || !img.complete) return false;
     const context = canvas.getContext('2d');
     
     // Scale image to cover the canvas (object-fit: cover equivalent)
@@ -40,19 +51,29 @@ const Hero = () => {
     context.clearRect(0,0,canvas.width, canvas.height);
     context.drawImage(img, 0,0, img.width, img.height,
                        centerShift_x,centerShift_y,img.width*ratio, img.height*ratio);  
+    return true;
   };
+
+  const lastDrawnIndexRef = useRef(-1);
 
   // When scroll changes, update canvas
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (images.length === 0) return;
     
-    // Calculate frame index (0 to 239)
+    // Calculate frame index (0 to 95)
     const frameIndex = Math.min(
       frameCount - 1,
       Math.floor(latest * frameCount)
     );
 
-    drawImage(images[frameIndex]);
+    if (lastDrawnIndexRef.current !== frameIndex) {
+      requestAnimationFrame(() => {
+        const drawn = drawImage(images[frameIndex]);
+        if (drawn) {
+          lastDrawnIndexRef.current = frameIndex;
+        }
+      });
+    }
   });
 
   // Initial draw and handle canvas resize
@@ -85,23 +106,23 @@ const Hero = () => {
 
   // Text Animations based on scroll progress
   
-  // 1. Initial Title: Shows from 0% to 15% scroll
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.1, 0.15], [1, 1, 0]);
-  const titleY = useTransform(scrollYProgress, [0, 0.15], [0, -100]);
-  const titleScale = useTransform(scrollYProgress, [0, 0.15], [1, 1.2]);
+  // 1. Initial Title: Shows from 0% to 25% scroll, fades out by 35%
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.25, 0.35], [1, 1, 0]);
+  const titleY = useTransform(scrollYProgress, [0, 0.35], [0, -100]);
+  const titleScale = useTransform(scrollYProgress, [0, 0.35], [1, 1.2]);
   
-  // 2. Subtitle Sequence: Fades in at 25%, peaks at 40%, fades out by 55%
-  const subtitleOpacity = useTransform(scrollYProgress, [0.25, 0.35, 0.45, 0.55], [0, 1, 1, 0]);
-  const subtitleScale = useTransform(scrollYProgress, [0.25, 0.4, 0.55], [0.8, 1, 1.2]);
-  const subtitleY = useTransform(scrollYProgress, [0.25, 0.55], [50, -50]);
+  // 2. Subtitle Sequence: Fades in at 35%, visible till 65%, fades out by 75%
+  const subtitleOpacity = useTransform(scrollYProgress, [0.35, 0.45, 0.65, 0.75], [0, 1, 1, 0]);
+  const subtitleScale = useTransform(scrollYProgress, [0.35, 0.55, 0.75], [0.8, 1, 1.2]);
+  const subtitleY = useTransform(scrollYProgress, [0.35, 0.75], [50, -50]);
 
-  // 3. Feature Sequence: Fades in at 65%, peaks at 80%, fades out by 95%
-  const featureOpacity = useTransform(scrollYProgress, [0.65, 0.75, 0.85, 0.95], [0, 1, 1, 0]);
-  const featureY = useTransform(scrollYProgress, [0.65, 0.95], [100, -100]);
-  const featureScale = useTransform(scrollYProgress, [0.65, 0.8, 0.95], [0.9, 1.1, 1.3]);
+  // 3. Feature Sequence: Fades in at 75%, peaks at 90%, fades out by 100%
+  const featureOpacity = useTransform(scrollYProgress, [0.75, 0.85, 0.95, 1], [0, 1, 1, 0]);
+  const featureY = useTransform(scrollYProgress, [0.75, 1], [100, -100]);
+  const featureScale = useTransform(scrollYProgress, [0.75, 0.9, 1], [0.9, 1.1, 1.3]);
 
   return (
-    <section id="home" ref={containerRef} style={{ height: '600vh', position: 'relative', backgroundColor: '#000' }}>
+    <section id="home" ref={containerRef} style={{ height: '250vh', position: 'relative', backgroundColor: '#000' }}>
       <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
         {/* Canvas for the image sequence */}
         <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
