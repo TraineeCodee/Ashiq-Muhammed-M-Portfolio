@@ -77,7 +77,7 @@ const Showcase = () => {
           <p style={{ color: '#a0a0a0', fontSize: '1.2rem', lineHeight: 1.6 }}>
             Specialized in UI/UX for games, digital branding, and technical asset creation utilizing Figma and Adobe Suite.
           </p>
-          <a href="https://drive.google.com/drive/folders/1u8LKZf7xujbc5mO9N8Hq7ীব-a9JoJdND" target="_blank" rel="noreferrer" style={{ display: 'inline-block', marginTop: '1.5rem', color: '#00FFFF', fontWeight: 'bold' }}>
+          <a href="https://drive.google.com/drive/folders/1u8LKZf7xujbc5mO9N8Hq7Yb-a9JoJdND?usp=drive_link" target="_blank" rel="noreferrer" style={{ display: 'inline-block', marginTop: '1.5rem', color: '#00FFFF', fontWeight: 'bold' }}>
             View Design Samples →
           </a>
         </motion.div>
