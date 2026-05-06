@@ -14,7 +14,6 @@ const navLinks = [
 const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,20 +24,10 @@ const Navigation = () => {
       }
     };
 
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth >= 768) {
-        setIsOpen(false);
-      }
-    };
-
-    handleResize(); // Initialize on mount
     window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', handleResize);
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -51,13 +40,13 @@ const Navigation = () => {
       transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 1.5 }}
       style={{
         position: 'fixed',
-        top: isMobile ? '1.5rem' : '2rem',
+        top: '1.5rem',
         left: 0,
         width: '100vw',
         zIndex: 10000,
         display: 'flex',
-        justifyContent: isMobile ? 'flex-end' : 'center',
-        paddingRight: isMobile ? '1.5rem' : '0',
+        justifyContent: 'flex-end',
+        paddingRight: '2rem',
         pointerEvents: 'none' // allow clicking through empty space
       }}
     >
@@ -65,61 +54,59 @@ const Navigation = () => {
         className="glass"
         style={{
           display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          gap: isMobile ? '0' : '2rem',
-          padding: isMobile ? '0.75rem' : '1rem 3rem',
-          borderRadius: isMobile ? (isOpen ? '20px' : '50%') : '50px',
+          flexDirection: 'column',
+          gap: 0,
+          padding: '0.75rem',
+          borderRadius: isOpen ? '20px' : '50%',
           background: scrolled || isOpen ? 'rgba(5, 5, 5, 0.85)' : 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
           pointerEvents: 'auto', // re-enable clicks on the bar itself
           transition: 'all 0.3s ease',
           boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
           border: '1px solid rgba(0, 255, 255, 0.1)',
-          alignItems: isMobile ? 'flex-end' : 'center',
+          alignItems: 'flex-end',
           overflow: 'hidden'
         }}
       >
-        {isMobile && (
-          <button
-            onClick={toggleMenu}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#fff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '0.25rem',
-              cursor: 'none'
-            }}
-          >
-            {isOpen ? <X size={28} color="#00FFFF" /> : <Menu size={28} color="#00FFFF" />}
-          </button>
-        )}
+        <button
+          onClick={toggleMenu}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: '#fff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '0.25rem',
+            cursor: 'none'
+          }}
+        >
+          {isOpen ? <X size={28} color="#00FFFF" /> : <Menu size={28} color="#00FFFF" />}
+        </button>
 
         <AnimatePresence>
-          {(!isMobile || isOpen) && (
+          {isOpen && (
             <motion.div
-              initial={isMobile ? { height: 0, opacity: 0 } : false}
-              animate={isMobile ? { height: 'auto', opacity: 1 } : false}
-              exit={isMobile ? { height: 0, opacity: 0 } : false}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
               style={{
                 display: 'flex',
-                flexDirection: isMobile ? 'column' : 'row',
-                gap: isMobile ? '1.5rem' : '2rem',
-                paddingTop: isMobile && isOpen ? '1.5rem' : '0',
-                paddingBottom: isMobile && isOpen ? '0.5rem' : '0',
-                paddingRight: isMobile && isOpen ? '0.5rem' : '0',
-                paddingLeft: isMobile && isOpen ? '2rem' : '0',
-                alignItems: isMobile ? 'flex-end' : 'center',
-                width: isMobile ? 'max-content' : 'auto',
+                flexDirection: 'column',
+                gap: '1.5rem',
+                paddingTop: '1.5rem',
+                paddingBottom: '0.5rem',
+                paddingRight: '0.5rem',
+                paddingLeft: '2rem',
+                alignItems: 'flex-end',
+                width: 'max-content',
               }}
             >
               {navLinks.map((link) => (
                 <a 
                   key={link.name} 
                   href={link.href}
-                  onClick={() => isMobile && setIsOpen(false)}
+                  onClick={() => setIsOpen(false)}
                   style={{
                     color: '#ffffff',
                     fontSize: '1.1rem',
