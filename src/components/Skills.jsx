@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 const skills = [
   "Figma",
   "Adobe Photoshop",
-  "Adobe Illustrator",
   "Unity",
   "Game Mechanics",
   "C#"

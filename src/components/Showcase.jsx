@@ -97,7 +97,7 @@ const Showcase = () => {
           <h3 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Tech Stack</h3>
           <ul style={{ color: '#a0a0a0', fontSize: '1.2rem', lineHeight: 1.8, listStyle: 'none' }}>
             <li><strong>Engine:</strong> Unity (C# Expert)</li>
-            <li><strong>Design:</strong> Figma, Photoshop, Illustrator</li>
+            <li><strong>Design:</strong> Figma, Photoshop</li>
             <li><strong>Systems:</strong> Data Structures, Cybersecurity</li>
           </ul>
         </motion.div>
