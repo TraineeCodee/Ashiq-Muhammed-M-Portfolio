@@ -82,12 +82,46 @@ const Chatbot = () => {
 
     // 3. Projects
     if (query.includes('project') || query.includes('game') || query.includes('showcase') || query.includes('sample')) {
-      return "🎮 Ashiq specializes in creating detailed 3D games and technical art. You can check out his showcase links and designs inside the 'Technical Art' and 'Experience' sections on this page!";
+      return (
+        <div>
+          🎮 Ashiq specializes in creating detailed 3D games and technical art.
+          <br /><br />
+          Explore his works here:
+          <div style={{ marginTop: '0.8rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            <a 
+              href="https://github.com/TraineeCodee/Ashiq-Muhammed-M-Portfolio" 
+              target="_blank" 
+              rel="noreferrer" 
+              style={{ color: '#00FFFF', textDecoration: 'underline', fontWeight: 600, cursor: 'none' }}
+            >
+              GitHub Code Repository 💻
+            </a>
+            <a 
+              href="https://drive.google.com/drive/folders/1u8LKZf7xujbc5mO9N8Hq7Yb-a9JoJdND?usp=drive_link" 
+              target="_blank" 
+              rel="noreferrer" 
+              style={{ color: '#FF00FF', textDecoration: 'underline', fontWeight: 600, cursor: 'none' }}
+            >
+              Google Drive Design Samples 📁
+            </a>
+          </div>
+        </div>
+      );
     }
 
     // 4. Contact
     if (query.includes('contact') || query.includes('mail') || query.includes('phone') || query.includes('hire') || query.includes('email') || query.includes('locate') || query.includes('kerala')) {
-      return "✉️ Let's connect! Email: ashiq.muhammed.designer@gmail.com | Phone: +91 88484 27429. He is based in Kerala, India, and works globally!";
+      return (
+        <div>
+          ✉️ Let's connect!
+          <br /><br />
+          Email: <a href="mailto:ashiq.muhammed.designer@gmail.com" style={{ color: '#00FFFF', textDecoration: 'underline', cursor: 'none' }}>ashiq.muhammed.designer@gmail.com</a>
+          <br />
+          Phone: <a href="tel:+918848427429" style={{ color: '#FF00FF', textDecoration: 'underline', cursor: 'none' }}>+91 88484 27429</a>
+          <br /><br />
+          Based in Kerala, India. Working globally!
+        </div>
+      );
     }
 
     // 5. Greetings
