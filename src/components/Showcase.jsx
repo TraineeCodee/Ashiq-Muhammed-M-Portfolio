@@ -87,7 +87,7 @@ const Showcase = () => {
           <Boxes size={50} color="#FF00FF" style={{ marginBottom: '2rem' }} />
           <h3 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Technical Art</h3>
           <p style={{ color: '#a0a0a0', fontSize: '1.2rem', lineHeight: 1.6 }}>
-            Low-poly 3D modeling, advanced shader graph implementation, and interactive HUD designs.
+            Low-poly 3D modeling, Unity Timeline cinematics, Cinemachine camera systems, animation integration.
           </p>
         </motion.div>
 
