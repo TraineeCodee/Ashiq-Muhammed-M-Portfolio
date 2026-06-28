@@ -119,7 +119,8 @@ const Details = () => {
             transition={{ type: 'spring', stiffness: 180, damping: 20, mass: 0.8 }}
             style={{
               width: '100%',
-              aspectRatio: '3/4',
+              aspectRatio: isMobile ? 'auto' : '3/4',
+              minHeight: isMobile ? '590px' : 'auto',
               borderRadius: '24px',
               position: 'relative',
               transformStyle: 'preserve-3d',
@@ -194,7 +195,7 @@ const Details = () => {
                 width: '100%',
                 height: '100%',
                 borderRadius: '24px',
-                padding: isMobile ? '1.5rem 1.2rem' : '2.2rem 1.8rem',
+                padding: isMobile ? '1.2rem 1rem' : '2rem 1.6rem',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -204,67 +205,113 @@ const Details = () => {
                 fontFamily: 'Space Grotesk'
               }}>
                 {/* Card Title */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '0.8rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '0.6rem' }}>
                   <span style={{ fontSize: '0.78rem', color: '#00FFFF', letterSpacing: '2px', fontWeight: 700, textTransform: 'uppercase' }}>Character Sheet</span>
                   <span style={{ fontSize: '0.8rem', color: '#FF00FF', fontWeight: 700, border: '1px solid rgba(255,0,255,0.3)', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255,0,255,0.05)' }}>LVL {lvl}</span>
                 </div>
 
                 {/* Name & Class */}
-                <div style={{ marginTop: '0.6rem' }}>
-                  <h4 style={{ fontSize: '1.35rem', fontWeight: 800, margin: 0, letterSpacing: '-0.5px' }}>Ashiq Muhammed M</h4>
-                  <span style={{ fontSize: '0.8rem', color: '#a0a0a0' }}>Unity Specialist / UI Knight</span>
+                <div style={{ marginTop: '0.5rem' }}>
+                  <h4 style={{ fontSize: '1.3rem', fontWeight: 800, margin: 0, letterSpacing: '-0.5px' }}>Ashiq Muhammed M</h4>
+                  <span style={{ fontSize: '0.78rem', color: '#a0a0a0' }}>Unity Specialist / UI Knight</span>
                 </div>
 
-                {/* Attributes bars */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', margin: '0.6rem 0' }}>
-                  {/* Overall Skill */}
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '0.2rem' }}>
-                      <span style={{ color: '#FFD700', fontWeight: 700 }}>Overall Mastery (OVL)</span>
-                      <span style={{ color: '#FFD700', fontWeight: 700 }}>92%</span>
-                    </div>
-                    <div style={{ width: '100%', height: '6px', background: 'rgba(255,215,0,0.1)', borderRadius: '3px', overflow: 'hidden', border: '1px solid rgba(255,215,0,0.15)' }}>
-                      <div style={{ width: '92%', height: '100%', background: 'linear-gradient(to right, #FFD700, #FFA500)' }} />
-                    </div>
+                {/* Overall Skill Bar */}
+                <div style={{ margin: '0.4rem 0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.15rem' }}>
+                    <span style={{ color: '#FFD700', fontWeight: 700 }}>Overall Mastery (OVL)</span>
+                    <span style={{ color: '#FFD700', fontWeight: 700 }}>87%</span>
                   </div>
-                  {/* Attr 1 */}
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '0.2rem' }}>
-                      <span style={{ color: '#dfdfdf' }}>C# Scripting (COD)</span>
-                      <span style={{ color: '#00FFFF', fontWeight: 700 }}>95%</span>
-                    </div>
-                    <div style={{ width: '100%', height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ width: '95%', height: '100%', background: 'linear-gradient(to right, #00FFFF, #FF00FF)' }} />
-                    </div>
+                  <div style={{ width: '100%', height: '5px', background: 'rgba(255,215,0,0.1)', borderRadius: '3px', overflow: 'hidden', border: '1px solid rgba(255,215,0,0.15)' }}>
+                    <div style={{ width: '87%', height: '100%', background: 'linear-gradient(to right, #FFD700, #FFA500)' }} />
                   </div>
-                  {/* Attr 2 */}
+                </div>
+
+                {/* Attributes bars (2-Column Grid) */}
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: '1fr 1fr', 
+                  gap: isMobile ? '0.5rem 0.6rem' : '0.6rem 0.8rem',
+                  margin: '0.4rem 0' 
+                }}>
+                  {/* Skill 1 */}
                   <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '0.2rem' }}>
-                      <span style={{ color: '#dfdfdf' }}>Gameplay Engines (ENG)</span>
-                      <span style={{ color: '#FF00FF', fontWeight: 700 }}>92%</span>
-                    </div>
-                    <div style={{ width: '100%', height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ width: '92%', height: '100%', background: 'linear-gradient(to right, #FF00FF, #00FFFF)' }} />
-                    </div>
-                  </div>
-                  {/* Attr 3 */}
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '0.2rem' }}>
-                      <span style={{ color: '#dfdfdf' }}>UI/UX Mockups (UI)</span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginBottom: '0.1rem' }}>
+                      <span style={{ color: '#dfdfdf' }}>🎮 Game Dev</span>
                       <span style={{ color: '#00FFFF', fontWeight: 700 }}>88%</span>
                     </div>
-                    <div style={{ width: '100%', height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                    <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
                       <div style={{ width: '88%', height: '100%', background: 'linear-gradient(to right, #00FFFF, #FF00FF)' }} />
                     </div>
                   </div>
-                  {/* Attr 4 */}
+                  {/* Skill 2 */}
                   <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '0.2rem' }}>
-                      <span style={{ color: '#dfdfdf' }}>3D Art & Shaders (ART)</span>
-                      <span style={{ color: '#FF00FF', fontWeight: 700 }}>85%</span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginBottom: '0.1rem' }}>
+                      <span style={{ color: '#dfdfdf' }}>🎨 UI/UX Design</span>
+                      <span style={{ color: '#FF00FF', fontWeight: 700 }}>88%</span>
                     </div>
-                    <div style={{ width: '100%', height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ width: '85%', height: '100%', background: 'linear-gradient(to right, #FF00FF, #00FFFF)' }} />
+                    <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '88%', height: '100%', background: 'linear-gradient(to right, #FF00FF, #00FFFF)' }} />
+                    </div>
+                  </div>
+                  {/* Skill 3 */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginBottom: '0.1rem' }}>
+                      <span style={{ color: '#dfdfdf' }}>⚙️ Tech Art</span>
+                      <span style={{ color: '#00FFFF', fontWeight: 700 }}>86%</span>
+                    </div>
+                    <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '86%', height: '100%', background: 'linear-gradient(to right, #00FFFF, #FF00FF)' }} />
+                    </div>
+                  </div>
+                  {/* Skill 4 */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginBottom: '0.1rem' }}>
+                      <span style={{ color: '#dfdfdf' }}>💻 Programming</span>
+                      <span style={{ color: '#FF00FF', fontWeight: 700 }}>80%</span>
+                    </div>
+                    <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '80%', height: '100%', background: 'linear-gradient(to right, #FF00FF, #00FFFF)' }} />
+                    </div>
+                  </div>
+                  {/* Skill 5 */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginBottom: '0.1rem' }}>
+                      <span style={{ color: '#dfdfdf' }}>🧩 Prob Solving</span>
+                      <span style={{ color: '#00FFFF', fontWeight: 700 }}>84%</span>
+                    </div>
+                    <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '84%', height: '100%', background: 'linear-gradient(to right, #00FFFF, #FF00FF)' }} />
+                    </div>
+                  </div>
+                  {/* Skill 6 */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginBottom: '0.1rem' }}>
+                      <span style={{ color: '#dfdfdf' }}>🤝 Teamwork</span>
+                      <span style={{ color: '#FF00FF', fontWeight: 700 }}>94%</span>
+                    </div>
+                    <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '94%', height: '100%', background: 'linear-gradient(to right, #FF00FF, #00FFFF)' }} />
+                    </div>
+                  </div>
+                  {/* Skill 7 */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginBottom: '0.1rem' }}>
+                      <span style={{ color: '#dfdfdf' }}>🚀 Leadership</span>
+                      <span style={{ color: '#00FFFF', fontWeight: 700 }}>88%</span>
+                    </div>
+                    <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '88%', height: '100%', background: 'linear-gradient(to right, #00FFFF, #FF00FF)' }} />
+                    </div>
+                  </div>
+                  {/* Skill 8 */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginBottom: '0.1rem' }}>
+                      <span style={{ color: '#dfdfdf' }}>📢 Comm</span>
+                      <span style={{ color: '#FF00FF', fontWeight: 700 }}>90%</span>
+                    </div>
+                    <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '90%', height: '100%', background: 'linear-gradient(to right, #FF00FF, #00FFFF)' }} />
                     </div>
                   </div>
                 </div>
