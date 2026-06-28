@@ -352,7 +352,7 @@ const Details = () => {
                 {/* Rating Card Footer */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '0.5rem 0.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', zIndex: 2 }}>
                   <span style={{ fontSize: '0.75rem', color: '#a0a0a0' }}>Quest Rating:</span>
-                  <span style={{ fontSize: '0.88rem', color: '#FFD700', fontWeight: 800, letterSpacing: '1px', textShadow: '0 0 5px rgba(255,215,0,0.3)' }}>OVERALL 87 (S-RANK)</span>
+                  <span style={{ fontSize: '0.88rem', color: '#FFD700', fontWeight: 800, letterSpacing: '1px', textShadow: '0 0 5px rgba(255,215,0,0.3)' }}>OVERALL 87%</span>
                 </div>
               </div>
             </div>
