@@ -42,15 +42,20 @@ const CustomCursor = () => {
   const getLevelName = (lvl) => levelNames[lvl] || 'Console Legend';
 
   // Persistence helpers
+  // Dynamic max XP calculation based on Level (e.g., Level 1 needs 100 XP, Level 2 needs 150 XP, etc.)
+  const getXpNeeded = (lvl) => 100 + (lvl - 1) * 50;
+
   const addXp = (amount, sourceText = '') => {
     setXp((prevXp) => {
       let newXp = prevXp + amount;
       let newLevel = level;
+      let needed = getXpNeeded(newLevel);
       
-      // Level Up condition (100 XP per level)
-      while (newXp >= 100) {
-        newXp -= 100;
+      // Level Up condition (XP required increases with level)
+      while (newXp >= needed) {
+        newXp -= needed;
         newLevel += 1;
+        needed = getXpNeeded(newLevel);
         // Level up popup
         triggerPopup(`Level Up! ${getLevelName(newLevel)}`, position.x, position.y - 40, '#00FFFF');
       }
@@ -291,11 +296,11 @@ const CustomCursor = () => {
 
         {/* XP Bar */}
         <div style={{ background: 'rgba(255,255,255,0.05)', height: '6px', borderRadius: '3px', overflow: 'hidden', position: 'relative' }}>
-          <div style={{ width: `${xp}%`, height: '100%', background: 'linear-gradient(to right, #00FFFF, #FF00FF)', transition: 'width 0.3s' }} />
+          <div style={{ width: `${(xp / getXpNeeded(level)) * 100}%`, height: '100%', background: 'linear-gradient(to right, #00FFFF, #FF00FF)', transition: 'width 0.3s' }} />
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#888' }}>
-          <span>XP: {xp}/100</span>
+          <span>XP: {xp}/{getXpNeeded(level)}</span>
           <span style={{ color: '#fff' }}>Score: {score}</span>
         </div>
 
