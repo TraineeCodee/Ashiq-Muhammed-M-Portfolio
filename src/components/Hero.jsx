@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 
 const frameCount = 96;
-const currentFrame = (index) => `${import.meta.env.BASE_URL}images/herosection/ezgif-frame-${index.toString().padStart(3, '0')}.svg`;
+const currentFrame = (index) => `${import.meta.env.BASE_URL}images/herosection/ezgif-frame-${index.toString().padStart(3, '0')}.webp`;
 
 const Hero = () => {
   const containerRef = useRef(null);
