@@ -20,10 +20,11 @@ const Hero = () => {
     if (!canvas || !img || !img.complete) return false;
     const context = canvas.getContext('2d');
     
-    // Scale image to cover the canvas (object-fit: cover equivalent)
+    // Scale image to contain it within the canvas (fully visible, no cropping)
     const hRatio = canvas.width / img.width;
     const vRatio = canvas.height / img.height;
-    const ratio  = Math.max( hRatio, vRatio );
+    // Use Math.min to contain the image, and scale down slightly (0.85) to add padding/breathing room
+    const ratio  = Math.min( hRatio, vRatio ) * 0.85;
     const centerShift_x = ( canvas.width - img.width*ratio ) / 2;
     const centerShift_y = ( canvas.height - img.height*ratio ) / 2;  
     
@@ -168,7 +169,7 @@ const Hero = () => {
     <section id="home" ref={containerRef} style={{ height: '250vh', position: 'relative', backgroundColor: '#000' }}>
       <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
         {/* Canvas for the image sequence */}
-        <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+        <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block', filter: 'drop-shadow(0 0 12px rgba(0, 255, 255, 0.45))' }} />
         
         {/* Overlay Text Content */}
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
