@@ -2,34 +2,13 @@ import React, { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 
 const frameCount = 96;
-const currentFrame = (index) => `${import.meta.env.BASE_URL}images/herosection/ezgif-frame-${index.toString().padStart(3, '0')}.png`;
+const currentFrame = (index) => `${import.meta.env.BASE_URL}images/herosection/ezgif-frame-${index.toString().padStart(3, '0')}.svg`;
 
 const Hero = () => {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
+  const lastDrawnIndexRef = useRef(-1);
   const [images, setImages] = useState([]);
-  
-  // Preload images
-  useEffect(() => {
-    const loadedImages = [];
-    for (let i = 1; i <= frameCount; i++) {
-      const img = new Image();
-      img.src = currentFrame(i);
-      img.onload = () => {
-        // If this image is the one that should currently be displayed, draw it!
-        const currentProgress = scrollYProgress ? scrollYProgress.get() : 0;
-        const expectedIndex = Math.min(frameCount - 1, Math.floor(currentProgress * frameCount));
-        if (i - 1 === expectedIndex) {
-           requestAnimationFrame(() => {
-             const drawn = drawImage(img);
-             if (drawn) lastDrawnIndexRef.current = expectedIndex;
-           });
-        }
-      };
-      loadedImages.push(img);
-    }
-    setImages(loadedImages);
-  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -54,7 +33,69 @@ const Hero = () => {
     return true;
   };
 
-  const lastDrawnIndexRef = useRef(-1);
+  // Preload images progressively in batches
+  useEffect(() => {
+    const loadedImages = new Array(frameCount);
+    let isCancelled = false;
+
+    const loadImage = (i) => {
+      return new Promise((resolve) => {
+        if (isCancelled) {
+          resolve(null);
+          return;
+        }
+        const img = new Image();
+        img.src = currentFrame(i);
+        img.onload = () => {
+          if (isCancelled) {
+            resolve(null);
+            return;
+          }
+          loadedImages[i - 1] = img;
+          
+          // Draw if this is the active frame
+          const currentProgress = scrollYProgress ? scrollYProgress.get() : 0;
+          const expectedIndex = Math.min(frameCount - 1, Math.floor(currentProgress * frameCount));
+          if (i - 1 === expectedIndex) {
+            requestAnimationFrame(() => {
+              const drawn = drawImage(img);
+              if (drawn) lastDrawnIndexRef.current = expectedIndex;
+            });
+          }
+          resolve(img);
+        };
+        img.onerror = () => {
+          resolve(null);
+        };
+      });
+    };
+
+    const loadAllProgressively = async () => {
+      // 1. Load the first frame immediately
+      await loadImage(1);
+      if (isCancelled) return;
+      setImages([...loadedImages]);
+
+      // 2. Load the rest in small batches of 6
+      const batchSize = 6;
+      for (let i = 2; i <= frameCount; i += batchSize) {
+        if (isCancelled) break;
+        const promises = [];
+        for (let j = 0; j < batchSize && (i + j) <= frameCount; j++) {
+          promises.push(loadImage(i + j));
+        }
+        await Promise.all(promises);
+        if (isCancelled) break;
+        setImages([...loadedImages]);
+      }
+    };
+
+    loadAllProgressively();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [scrollYProgress]);
 
   // When scroll changes, update canvas
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
@@ -68,9 +109,11 @@ const Hero = () => {
 
     if (lastDrawnIndexRef.current !== frameIndex) {
       requestAnimationFrame(() => {
-        const drawn = drawImage(images[frameIndex]);
-        if (drawn) {
-          lastDrawnIndexRef.current = frameIndex;
+        if (images[frameIndex]) {
+          const drawn = drawImage(images[frameIndex]);
+          if (drawn) {
+            lastDrawnIndexRef.current = frameIndex;
+          }
         }
       });
     }
@@ -86,7 +129,9 @@ const Hero = () => {
         if (images.length > 0) {
           const currentProgress = scrollYProgress.get();
           const frameIndex = Math.min(frameCount - 1, Math.floor(currentProgress * frameCount));
-          drawImage(images[frameIndex]);
+          if (images[frameIndex]) {
+            drawImage(images[frameIndex]);
+          }
         }
       }
     };
@@ -95,10 +140,8 @@ const Hero = () => {
     window.addEventListener('resize', handleResize);
     
     // Draw first frame if loaded
-    if (images.length > 0) {
-        images[0].onload = () => drawImage(images[0]);
-        // In case it's already cached/loaded
-        if (images[0].complete) drawImage(images[0]);
+    if (images[0]) {
+      drawImage(images[0]);
     }
 
     return () => window.removeEventListener('resize', handleResize);
