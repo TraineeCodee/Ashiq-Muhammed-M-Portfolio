@@ -94,7 +94,7 @@ function App() {
         style={{
           position: 'fixed',
           top: 0, left: 0, width: '100vw', height: '100vh',
-          background: '#050505',
+          background: 'radial-gradient(circle at center, #12121c 0%, #030305 100%)',
           zIndex: 9999,
           display: 'flex',
           flexDirection: 'column',
@@ -105,6 +105,29 @@ function App() {
           overflow: 'hidden'
         }}
       >
+        {/* Ambient Drifting Blurs (Cyber Arcade Vibes) */}
+        <motion.div 
+          animate={{ x: [-60, 60, -60], y: [-30, 30, -30] }}
+          transition={{ repeat: Infinity, duration: 12, ease: 'easeInOut' }}
+          style={{ position: 'absolute', width: '380px', height: '380px', borderRadius: '50%', background: 'rgba(0, 255, 255, 0.05)', filter: 'blur(90px)', top: '10%', left: '10%', pointerEvents: 'none', zIndex: 1 }}
+        />
+        <motion.div 
+          animate={{ x: [60, -60, 60], y: [30, -30, 30] }}
+          transition={{ repeat: Infinity, duration: 15, ease: 'easeInOut' }}
+          style={{ position: 'absolute', width: '380px', height: '380px', borderRadius: '50%', background: 'rgba(255, 0, 255, 0.05)', filter: 'blur(90px)', bottom: '10%', right: '10%', pointerEvents: 'none', zIndex: 1 }}
+        />
+
+        {/* Faint Retro CRT Scanline Overlay */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%)',
+          backgroundSize: '100% 4px',
+          zIndex: 2,
+          pointerEvents: 'none',
+          opacity: 0.5
+        }} />
+
         {/* Floating clicker coins during load screen */}
         <AnimatePresence>
           {coins.map((coin) => (
