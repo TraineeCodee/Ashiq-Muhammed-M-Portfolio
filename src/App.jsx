@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Hero from './components/Hero';
 import Details from './components/Details';
 import Skills from './components/Skills';
@@ -14,6 +14,30 @@ import { motion } from 'framer-motion';
 import './index.css';
 
 function App() {
+  const [progress, setProgress] = useState(0);
+  const [isStarted, setIsStarted] = useState(false);
+
+  useEffect(() => {
+    let timer;
+    if (progress < 100) {
+      timer = setTimeout(() => {
+        setProgress((prev) => {
+          const increment = Math.floor(Math.random() * 12) + 6;
+          return Math.min(100, prev + increment);
+        });
+      }, Math.random() * 120 + 40);
+    }
+    return () => clearTimeout(timer);
+  }, [progress]);
+
+  const getLoadingText = (p) => {
+    if (p < 25) return 'BOOTING CONSOLE MODULE...';
+    if (p < 55) return 'GENERATING XP DIAMONDS...';
+    if (p < 80) return 'STAGING UNITY TIMELINES...';
+    if (p < 99) return 'BOOTING VIBE CURSOR...';
+    return 'CONSOLE BOOT SUCCESS!';
+  };
+
   return (
     <>
       <CustomCursor />
@@ -23,42 +47,85 @@ function App() {
       {/* Cinematic Preloader Curtain */}
       <motion.div 
         initial={{ y: 0 }}
-        animate={{ y: '-100vh' }}
-        transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 0.8 }}
+        animate={{ y: isStarted ? '-100vh' : 0 }}
+        transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
         style={{
           position: 'fixed',
           top: 0, left: 0, width: '100vw', height: '100vh',
           background: '#050505',
           zIndex: 9999,
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          gap: '2.5rem',
+          pointerEvents: isStarted ? 'none' : 'auto'
         }}
       >
-        <motion.div 
-          initial={{ opacity: 0, filter: 'blur(10px)' }}
-          animate={{ opacity: 1, filter: 'blur(0px)' }}
-          transition={{ duration: 0.6 }}
-          style={{ 
-            fontSize: 'clamp(1.1rem, 3.5vw, 1.6rem)', 
-            color: '#00FFFF', 
-            fontFamily: 'Space Grotesk', 
-            letterSpacing: 'clamp(4px, 2vw, 10px)',
-            textShadow: '0 0 20px rgba(0, 255, 255, 0.5)',
-            textAlign: 'center',
-            width: '90%',
-            maxWidth: '500px'
-          }}
-        >
-          SYSTEM INITIATING
-        </motion.div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', width: '90%', maxWidth: '350px' }}>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            style={{ 
+              fontSize: 'clamp(0.9rem, 2.5vw, 1.2rem)', 
+              color: '#00FFFF', 
+              fontFamily: 'Space Grotesk', 
+              letterSpacing: '4px',
+              textShadow: '0 0 15px rgba(0, 255, 255, 0.4)',
+              textAlign: 'center',
+              textTransform: 'uppercase',
+              fontWeight: 700
+            }}
+          >
+            {getLoadingText(progress)}
+          </motion.div>
+
+          <div style={{ color: '#fff', fontSize: '2rem', fontWeight: 800, fontFamily: 'Space Grotesk' }}>
+            {progress}%
+          </div>
+
+          {/* Progress bar */}
+          <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden', border: '1px solid rgba(0,255,255,0.1)' }}>
+            <div style={{ width: `${progress}%`, height: '100%', background: 'linear-gradient(to right, #00FFFF, #FF00FF)', transition: 'width 0.15s ease-out' }} />
+          </div>
+        </div>
+
+        {/* Start Game Button */}
+        {progress === 100 && (
+          <motion.button
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: [0.96, 1.04, 0.96], opacity: 1 }}
+            transition={{ 
+              scale: { repeat: Infinity, duration: 1.5, ease: 'easeInOut' },
+              opacity: { duration: 0.4 }
+            }}
+            onClick={() => setIsStarted(true)}
+            style={{
+              background: 'rgba(0, 255, 255, 0.1)',
+              border: '1px solid #00FFFF',
+              borderRadius: '50px',
+              color: '#00FFFF',
+              padding: '0.8rem 2.2rem',
+              fontSize: '1.1rem',
+              fontWeight: 700,
+              fontFamily: 'Space Grotesk',
+              letterSpacing: '2px',
+              boxShadow: '0 0 25px rgba(0, 255, 255, 0.25)',
+              textTransform: 'uppercase',
+              pointerEvents: 'auto',
+              cursor: 'none'
+            }}
+          >
+            Press Start
+          </motion.button>
+        )}
       </motion.div>
 
       {/* Main Content Entrance Animation */}
       <motion.main
         initial={{ opacity: 0, y: 50, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 1.2 }}
+        animate={{ opacity: isStarted ? 1 : 0, y: isStarted ? 0 : 50, scale: isStarted ? 1 : 0.98 }}
+        transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
       >
         <Hero />
         <Details />
