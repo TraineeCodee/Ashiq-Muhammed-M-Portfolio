@@ -20,16 +20,16 @@ function App() {
   const [coins, setCoins] = useState([]);
   const [coinsCollected, setCoinsCollected] = useState(0);
 
-  // Progressive background loading simulation
+  // Progressive background loading simulation (slower for active clicker quest)
   useEffect(() => {
     let timer;
     if (progress < 100) {
       timer = setTimeout(() => {
         setProgress((prev) => {
-          const increment = Math.floor(Math.random() * 10) + 4;
+          const increment = Math.floor(Math.random() * 3) + 1; // 1% to 3%
           return Math.min(100, prev + increment);
         });
-      }, Math.random() * 150 + 60);
+      }, Math.random() * 100 + 120); // 120ms to 220ms (average 170ms)
     }
     return () => clearTimeout(timer);
   }, [progress]);
@@ -42,9 +42,9 @@ function App() {
     }
 
     const spawnInterval = setInterval(() => {
-      // Limit active coins on screen
+      // Limit active coins on screen to 5
       setCoins((prev) => {
-        if (prev.length >= 4) return prev;
+        if (prev.length >= 5) return prev;
         const newCoin = {
           id: Math.random(),
           x: Math.random() * 70 + 15, // 15% to 85% width
@@ -53,7 +53,7 @@ function App() {
         };
         return [...prev, newCoin];
       });
-    }, 1400);
+    }, 1100); // spawn slightly faster to match slow load
 
     return () => clearInterval(spawnInterval);
   }, [progress, isStarted]);
@@ -61,7 +61,7 @@ function App() {
   const handleCoinClick = (coinId, coinXp) => {
     setCoins((prev) => prev.filter((c) => c.id !== coinId));
     setCoinsCollected((prev) => prev + 1);
-    setProgress((p) => Math.min(100, p + 4)); // Boosts loading speed by 4%!
+    setProgress((p) => Math.min(100, p + 8)); // Boosts loading speed by 8% per coin!
 
     // Dispatch XP reward to the custom cursor stats!
     window.dispatchEvent(
