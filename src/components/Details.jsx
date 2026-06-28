@@ -7,6 +7,8 @@ const Details = () => {
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [lvl, setLvl] = useState('1');
 
   useEffect(() => {
     const checkMobile = () => {
@@ -16,6 +18,12 @@ const Details = () => {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  useEffect(() => {
+    if (isFlipped) {
+      setLvl(localStorage.getItem('cursor_level') || '1');
+    }
+  }, [isFlipped]);
 
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -77,7 +85,7 @@ const Details = () => {
         alignItems: 'center'
       }}>
         
-        {/* Dynamic Profile Picture Side */}
+        {/* Dynamic Profile / Attribute Card Side */}
         <motion.div 
           initial={{ opacity: 0, x: -100 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -85,8 +93,13 @@ const Details = () => {
           transition={{ duration: 1, ease: "easeOut" }}
           style={{
             display: 'flex',
-            justifyContent: 'center',
-            perspective: '1000px'
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '1.5rem',
+            perspective: '1000px',
+            width: '100%',
+            maxWidth: '400px',
+            margin: '0 auto'
           }}
         >
           <motion.div
@@ -94,51 +107,191 @@ const Details = () => {
             onMouseLeave={handleMouseLeave}
             animate={{
               rotateX,
-              rotateY,
+              rotateY: isFlipped ? 180 + rotateY : rotateY,
             }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30, mass: 0.5 }}
+            transition={{ type: 'spring', stiffness: 180, damping: 20, mass: 0.8 }}
             style={{
               width: '100%',
-              maxWidth: '400px',
               aspectRatio: '3/4',
               borderRadius: '24px',
               position: 'relative',
               transformStyle: 'preserve-3d',
+              cursor: 'none'
             }}
           >
-            {/* Glow Layer */}
+            {/* Front Side: Profile Picture */}
             <div style={{
               position: 'absolute',
-              inset: '-5px',
-              background: 'linear-gradient(45deg, #00FFFF, #FF00FF)',
-              borderRadius: '28px',
-              filter: 'blur(20px)',
-              opacity: 0.5,
-              transform: 'translateZ(-20px)'
-            }} />
-            
-            {/* Image Layer */}
-            <div className="glass" style={{
-              width: '100%',
-              height: '100%',
-              borderRadius: '24px',
-              padding: '10px',
-              transform: 'translateZ(20px)'
+              inset: 0,
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              zIndex: isFlipped ? 0 : 2,
+              transformStyle: 'preserve-3d'
             }}>
-              <img 
-                src="/me.jpeg" 
-                alt="Ashiq Muhammed M"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  borderRadius: '16px',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-                  filter: 'contrast(1.1) brightness(0.9)'
-                }}
-              />
+              {/* Glow Layer */}
+              <div style={{
+                position: 'absolute',
+                inset: '-5px',
+                background: 'linear-gradient(45deg, #00FFFF, #FF00FF)',
+                borderRadius: '28px',
+                filter: 'blur(20px)',
+                opacity: 0.5,
+                transform: 'translateZ(-20px)'
+              }} />
+              
+              {/* Image Layer */}
+              <div className="glass" style={{
+                width: '100%',
+                height: '100%',
+                borderRadius: '24px',
+                padding: '10px',
+                transform: 'translateZ(20px)'
+              }}>
+                <img 
+                  src="/me.jpeg" 
+                  alt="Ashiq Muhammed M"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    borderRadius: '16px',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                    filter: 'contrast(1.1) brightness(0.9)'
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Back Side: Player Attribute Card */}
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              transform: 'rotateY(180deg) translateZ(20px)',
+              zIndex: isFlipped ? 2 : 0,
+              transformStyle: 'preserve-3d'
+            }}>
+              {/* Glow Layer */}
+              <div style={{
+                position: 'absolute',
+                inset: '-5px',
+                background: 'linear-gradient(45deg, #FF00FF, #00FFFF)',
+                borderRadius: '28px',
+                filter: 'blur(20px)',
+                opacity: 0.5,
+                transform: 'translateZ(-20px)'
+              }} />
+
+              <div className="glass" style={{
+                width: '100%',
+                height: '100%',
+                borderRadius: '24px',
+                padding: isMobile ? '1.5rem 1.2rem' : '2.2rem 1.8rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                border: '1px solid rgba(0, 255, 255, 0.25)',
+                boxShadow: '0 0 25px rgba(0, 255, 255, 0.1)',
+                color: '#fff',
+                fontFamily: 'Space Grotesk'
+              }}>
+                {/* Card Title */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '0.8rem' }}>
+                  <span style={{ fontSize: '0.78rem', color: '#00FFFF', letterSpacing: '2px', fontWeight: 700, textTransform: 'uppercase' }}>Character Sheet</span>
+                  <span style={{ fontSize: '0.8rem', color: '#FF00FF', fontWeight: 700, border: '1px solid rgba(255,0,255,0.3)', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255,0,255,0.05)' }}>LVL {lvl}</span>
+                </div>
+
+                {/* Name & Class */}
+                <div style={{ marginTop: '0.6rem' }}>
+                  <h4 style={{ fontSize: '1.35rem', fontWeight: 800, margin: 0, letterSpacing: '-0.5px' }}>Ashiq Muhammed M</h4>
+                  <span style={{ fontSize: '0.8rem', color: '#a0a0a0' }}>Unity Specialist / UI Knight</span>
+                </div>
+
+                {/* Attributes bars */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', margin: '1rem 0' }}>
+                  {/* Attr 1 */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '0.2rem' }}>
+                      <span style={{ color: '#dfdfdf' }}>C# Scripting (COD)</span>
+                      <span style={{ color: '#00FFFF', fontWeight: 700 }}>95%</span>
+                    </div>
+                    <div style={{ width: '100%', height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ width: '95%', height: '100%', background: 'linear-gradient(to right, #00FFFF, #FF00FF)' }} />
+                    </div>
+                  </div>
+                  {/* Attr 2 */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '0.2rem' }}>
+                      <span style={{ color: '#dfdfdf' }}>Gameplay Engines (ENG)</span>
+                      <span style={{ color: '#FF00FF', fontWeight: 700 }}>92%</span>
+                    </div>
+                    <div style={{ width: '100%', height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ width: '92%', height: '100%', background: 'linear-gradient(to right, #FF00FF, #00FFFF)' }} />
+                    </div>
+                  </div>
+                  {/* Attr 3 */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '0.2rem' }}>
+                      <span style={{ color: '#dfdfdf' }}>UI/UX Mockups (UI)</span>
+                      <span style={{ color: '#00FFFF', fontWeight: 700 }}>88%</span>
+                    </div>
+                    <div style={{ width: '100%', height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ width: '88%', height: '100%', background: 'linear-gradient(to right, #00FFFF, #FF00FF)' }} />
+                    </div>
+                  </div>
+                  {/* Attr 4 */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '0.2rem' }}>
+                      <span style={{ color: '#dfdfdf' }}>3D Art & Shaders (ART)</span>
+                      <span style={{ color: '#FF00FF', fontWeight: 700 }}>85%</span>
+                    </div>
+                    <div style={{ width: '100%', height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ width: '85%', height: '100%', background: 'linear-gradient(to right, #FF00FF, #00FFFF)' }} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Rating Card Footer */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '0.5rem 0.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span style={{ fontSize: '0.75rem', color: '#a0a0a0' }}>Quest Rating:</span>
+                  <span style={{ fontSize: '0.88rem', color: '#FFD700', fontWeight: 800, letterSpacing: '1px', textShadow: '0 0 5px rgba(255,215,0,0.3)' }}>OVERALL 92 (S-RANK)</span>
+                </div>
+              </div>
             </div>
           </motion.div>
+
+          {/* Toggle Stats Flip Button */}
+          <button
+            onClick={() => setIsFlipped(!isFlipped)}
+            style={{
+              background: 'rgba(0, 255, 255, 0.08)',
+              border: '1px solid rgba(0, 255, 255, 0.25)',
+              borderRadius: '30px',
+              color: '#00FFFF',
+              padding: '0.5rem 1.5rem',
+              fontSize: '0.82rem',
+              fontWeight: 700,
+              fontFamily: 'Space Grotesk',
+              letterSpacing: '1px',
+              textTransform: 'uppercase',
+              cursor: 'none',
+              transition: 'all 0.2s',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = '#00FFFF';
+              e.currentTarget.style.background = 'rgba(0, 255, 255, 0.12)';
+              e.currentTarget.style.boxShadow = '0 0 10px rgba(0, 255, 255, 0.2)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(0, 255, 255, 0.25)';
+              e.currentTarget.style.background = 'rgba(0, 255, 255, 0.08)';
+              e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)';
+            }}
+          >
+            {isFlipped ? 'View Portrait 👤' : 'View Stats Card 📊'}
+          </button>
         </motion.div>
 
         {/* Text Details Side */}
