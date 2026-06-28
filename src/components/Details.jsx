@@ -9,6 +9,9 @@ const Details = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
   const [lvl, setLvl] = useState('1');
+  const [xp, setXp] = useState('0');
+  const [score, setScore] = useState('0');
+  const [maxXp, setMaxXp] = useState('100');
 
   useEffect(() => {
     const checkMobile = () => {
@@ -21,7 +24,11 @@ const Details = () => {
 
   useEffect(() => {
     if (isFlipped) {
-      setLvl(localStorage.getItem('cursor_level') || '1');
+      const currentLvl = parseInt(localStorage.getItem('cursor_level') || '1');
+      setLvl(currentLvl.toString());
+      setXp(localStorage.getItem('cursor_xp') || '0');
+      setScore(localStorage.getItem('cursor_score') || '0');
+      setMaxXp((100 + (currentLvl - 1) * 50).toString());
     }
   }, [isFlipped]);
 
@@ -209,7 +216,17 @@ const Details = () => {
                 </div>
 
                 {/* Attributes bars */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', margin: '1rem 0' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', margin: '0.6rem 0' }}>
+                  {/* Overall Skill */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '0.2rem' }}>
+                      <span style={{ color: '#FFD700', fontWeight: 700 }}>Overall Mastery (OVL)</span>
+                      <span style={{ color: '#FFD700', fontWeight: 700 }}>92%</span>
+                    </div>
+                    <div style={{ width: '100%', height: '6px', background: 'rgba(255,215,0,0.1)', borderRadius: '3px', overflow: 'hidden', border: '1px solid rgba(255,215,0,0.15)' }}>
+                      <div style={{ width: '92%', height: '100%', background: 'linear-gradient(to right, #FFD700, #FFA500)' }} />
+                    </div>
+                  </div>
                   {/* Attr 1 */}
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '0.2rem' }}>
@@ -250,6 +267,12 @@ const Details = () => {
                       <div style={{ width: '85%', height: '100%', background: 'linear-gradient(to right, #FF00FF, #00FFFF)' }} />
                     </div>
                   </div>
+                </div>
+
+                {/* Real-time Player Quest Stats */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#a0a0a0', background: 'rgba(255,255,255,0.02)', padding: '0.45rem 0.8rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span>YOUR XP: <strong style={{ color: '#00FFFF' }}>{xp}/{maxXp}</strong></span>
+                  <span>SCORE: <strong style={{ color: '#FF00FF' }}>{score} PTS</strong></span>
                 </div>
 
                 {/* Rating Card Footer */}
