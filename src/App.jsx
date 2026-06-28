@@ -9,6 +9,7 @@ import FAQ from './components/FAQ';
 import InteractiveBackground from './components/InteractiveBackground';
 import CustomCursor from './components/CustomCursor';
 import Navigation from './components/Navigation';
+import Chatbot from './components/Chatbot';
 import { Mail, Phone, AtSign, Code, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import './index.css';
@@ -41,6 +42,7 @@ function App() {
   return (
     <>
       <CustomCursor />
+      <Chatbot />
       <Navigation />
       <InteractiveBackground />
 

@@ -91,6 +91,20 @@ const CustomCursor = () => {
     }, 1000);
   };
 
+  // Listen to external XP awards (like from VibeBot chatbot interactions)
+  useEffect(() => {
+    const handleExternalXp = (e) => {
+      if (e.detail && e.detail.amount) {
+        // Dispatch popup near screen center if cursor position is out of view
+        const px = position.x > 0 ? position.x : window.innerWidth / 2;
+        const py = position.y > 0 ? position.y : window.innerHeight / 2;
+        addXp(e.detail.amount, e.detail.text || '');
+      }
+    };
+    window.addEventListener('add_cursor_xp', handleExternalXp);
+    return () => window.removeEventListener('add_cursor_xp', handleExternalXp);
+  }, [level, xp, position]);
+
   // Spawn retro game XP gems
   useEffect(() => {
     const spawnGem = () => {
