@@ -17,19 +17,59 @@ import './index.css';
 function App() {
   const [progress, setProgress] = useState(0);
   const [isStarted, setIsStarted] = useState(false);
+  const [coins, setCoins] = useState([]);
+  const [coinsCollected, setCoinsCollected] = useState(0);
 
+  // Progressive background loading simulation
   useEffect(() => {
     let timer;
     if (progress < 100) {
       timer = setTimeout(() => {
         setProgress((prev) => {
-          const increment = Math.floor(Math.random() * 12) + 6;
+          const increment = Math.floor(Math.random() * 10) + 4;
           return Math.min(100, prev + increment);
         });
-      }, Math.random() * 120 + 40);
+      }, Math.random() * 150 + 60);
     }
     return () => clearTimeout(timer);
   }, [progress]);
+
+  // Spawn pixel coins during load screen
+  useEffect(() => {
+    if (progress >= 100 || isStarted) {
+      setCoins([]);
+      return;
+    }
+
+    const spawnInterval = setInterval(() => {
+      // Limit active coins on screen
+      setCoins((prev) => {
+        if (prev.length >= 4) return prev;
+        const newCoin = {
+          id: Math.random(),
+          x: Math.random() * 70 + 15, // 15% to 85% width
+          y: Math.random() * 50 + 20, // 20% to 70% height
+          xp: 15
+        };
+        return [...prev, newCoin];
+      });
+    }, 1400);
+
+    return () => clearInterval(spawnInterval);
+  }, [progress, isStarted]);
+
+  const handleCoinClick = (coinId, coinXp) => {
+    setCoins((prev) => prev.filter((c) => c.id !== coinId));
+    setCoinsCollected((prev) => prev + 1);
+    setProgress((p) => Math.min(100, p + 4)); // Boosts loading speed by 4%!
+
+    // Dispatch XP reward to the custom cursor stats!
+    window.dispatchEvent(
+      new CustomEvent('add_cursor_xp', {
+        detail: { amount: coinXp, text: `Loading Quest! +${coinXp} XP 🪙` }
+      })
+    );
+  };
 
   const getLoadingText = (p) => {
     if (p < 25) return 'BOOTING CONSOLE MODULE...';
@@ -61,10 +101,56 @@ function App() {
           alignItems: 'center',
           justifyContent: 'center',
           gap: '2.5rem',
-          pointerEvents: isStarted ? 'none' : 'auto'
+          pointerEvents: isStarted ? 'none' : 'auto',
+          overflow: 'hidden'
         }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', width: '90%', maxWidth: '350px' }}>
+        {/* Floating clicker coins during load screen */}
+        <AnimatePresence>
+          {coins.map((coin) => (
+            <motion.div
+              key={coin.id}
+              onClick={() => handleCoinClick(coin.id, coin.xp)}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1, y: [0, -10, 0] }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{ 
+                y: { repeat: Infinity, duration: 2, ease: 'easeInOut' },
+                scale: { duration: 0.2 }
+              }}
+              style={{
+                position: 'absolute',
+                left: `${coin.x}%`,
+                top: `${coin.y}%`,
+                width: '46px',
+                height: '46px',
+                background: 'rgba(255, 215, 0, 0.12)',
+                border: '2px solid #FFD700',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'none',
+                boxShadow: '0 0 15px rgba(255, 215, 0, 0.3)',
+                zIndex: 10000,
+                pointerEvents: 'auto'
+              }}
+            >
+              {/* Inner pixel gold star */}
+              <svg width="20" height="20" viewBox="0 0 9 9" fill="#FFD700">
+                <rect x="4" y="1" width="1" height="1" />
+                <rect x="3" y="2" width="3" height="1" />
+                <rect x="2" y="3" width="5" height="1" />
+                <rect x="1" y="4" width="7" height="1" />
+                <rect x="2" y="5" width="5" height="1" />
+                <rect x="3" y="6" width="3" height="1" />
+                <rect x="4" y="7" width="1" height="1" />
+              </svg>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', width: '90%', maxWidth: '350px', zIndex: 10 }}>
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -135,6 +221,32 @@ function App() {
               />
             </div>
           </div>
+
+          {/* Interactive loader quest help text */}
+          {progress < 100 ? (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+              style={{ 
+                fontSize: '0.75rem', 
+                color: '#FFD700', 
+                fontFamily: 'Space Grotesk', 
+                letterSpacing: '1.5px', 
+                textAlign: 'center',
+                textTransform: 'uppercase',
+                fontWeight: 600,
+                marginTop: '1rem',
+                textShadow: '0 0 8px rgba(255, 215, 0, 0.3)'
+              }}
+            >
+              🪙 Click floating pixel coins to boost speed & claim XP!
+            </motion.div>
+          ) : (
+            <div style={{ fontSize: '0.8rem', color: '#00FFFF', fontFamily: 'Space Grotesk', fontWeight: 600, letterSpacing: '1px', marginTop: '1rem' }}>
+              Quest Complete! {coinsCollected} Coins Secured.
+            </div>
+          )}
         </div>
 
         {/* Start Game Button */}
