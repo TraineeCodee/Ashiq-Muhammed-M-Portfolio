@@ -89,7 +89,7 @@ const Chatbot = () => {
           Explore his works here:
           <div style={{ marginTop: '0.8rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
             <a 
-              href="https://github.com/TraineeCodee/Ashiq-Muhammed-M-Portfolio" 
+              href="https://github.com/TraineeCodee?tab=repositories" 
               target="_blank" 
               rel="noreferrer" 
               style={{ color: '#00FFFF', textDecoration: 'underline', fontWeight: 600, cursor: 'none' }}
