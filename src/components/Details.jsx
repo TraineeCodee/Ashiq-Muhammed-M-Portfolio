@@ -180,16 +180,26 @@ const Details = () => {
               zIndex: isFlipped ? 2 : 0,
               transformStyle: 'preserve-3d'
             }}>
-              {/* Glow Layer */}
-              <div style={{
-                position: 'absolute',
-                inset: '-5px',
-                background: 'linear-gradient(45deg, #FF00FF, #00FFFF)',
-                borderRadius: '28px',
-                filter: 'blur(20px)',
-                opacity: 0.5,
-                transform: 'translateZ(-20px)'
-              }} />
+              {/* Pulsing Backside Glow Layer */}
+              <motion.div 
+                animate={{ 
+                  opacity: [0.4, 0.65, 0.4],
+                  scale: [0.99, 1.02, 0.99]
+                }}
+                transition={{ 
+                  repeat: Infinity, 
+                  duration: 4, 
+                  ease: 'easeInOut' 
+                }}
+                style={{
+                  position: 'absolute',
+                  inset: '-5px',
+                  background: 'linear-gradient(45deg, #FF00FF, #00FFFF)',
+                  borderRadius: '28px',
+                  filter: 'blur(20px)',
+                  transform: 'translateZ(-20px)'
+                }} 
+              />
 
               <div className="glass" style={{
                 width: '100%',
@@ -202,22 +212,38 @@ const Details = () => {
                 border: '1px solid rgba(0, 255, 255, 0.25)',
                 boxShadow: '0 0 25px rgba(0, 255, 255, 0.1)',
                 color: '#fff',
-                fontFamily: 'Space Grotesk'
+                fontFamily: 'Space Grotesk',
+                overflow: 'hidden',
+                position: 'relative'
               }}>
+                {/* Holographic Sheen Sweep Effect */}
+                <motion.div
+                  initial={{ x: '-100%', y: '-100%' }}
+                  animate={isFlipped ? { x: '100%', y: '100%' } : { x: '-100%', y: '-100%' }}
+                  transition={{ repeat: Infinity, repeatDelay: 3.5, duration: 1.8, ease: 'easeInOut' }}
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 70%)',
+                    pointerEvents: 'none',
+                    zIndex: 3
+                  }}
+                />
+
                 {/* Card Title */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '0.6rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '0.6rem', zIndex: 2 }}>
                   <span style={{ fontSize: '0.78rem', color: '#00FFFF', letterSpacing: '2px', fontWeight: 700, textTransform: 'uppercase' }}>Character Sheet</span>
                   <span style={{ fontSize: '0.8rem', color: '#FF00FF', fontWeight: 700, border: '1px solid rgba(255,0,255,0.3)', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255,0,255,0.05)' }}>LVL {lvl}</span>
                 </div>
 
                 {/* Name & Class */}
-                <div style={{ marginTop: '0.5rem' }}>
+                <div style={{ marginTop: '0.5rem', zIndex: 2 }}>
                   <h4 style={{ fontSize: '1.3rem', fontWeight: 800, margin: 0, letterSpacing: '-0.5px' }}>Ashiq Muhammed M</h4>
                   <span style={{ fontSize: '0.78rem', color: '#a0a0a0' }}>Unity Specialist / UI Knight</span>
                 </div>
 
                 {/* Overall Skill Bar */}
-                <div style={{ margin: '0.4rem 0' }}>
+                <div style={{ margin: '0.4rem 0', zIndex: 2 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.15rem' }}>
                     <span style={{ color: '#FFD700', fontWeight: 700 }}>Overall Mastery (OVL)</span>
                     <span style={{ color: '#FFD700', fontWeight: 700 }}>87%</span>
@@ -232,7 +258,8 @@ const Details = () => {
                   display: 'grid', 
                   gridTemplateColumns: '1fr 1fr', 
                   gap: isMobile ? '0.5rem 0.6rem' : '0.6rem 0.8rem',
-                  margin: '0.4rem 0' 
+                  margin: '0.4rem 0',
+                  zIndex: 2
                 }}>
                   {/* Skill 1 */}
                   <div>
@@ -317,15 +344,15 @@ const Details = () => {
                 </div>
 
                 {/* Real-time Player Quest Stats */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#a0a0a0', background: 'rgba(255,255,255,0.02)', padding: '0.45rem 0.8rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#a0a0a0', background: 'rgba(255,255,255,0.02)', padding: '0.45rem 0.8rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)', zIndex: 2 }}>
                   <span>YOUR XP: <strong style={{ color: '#00FFFF' }}>{xp}/{maxXp}</strong></span>
                   <span>SCORE: <strong style={{ color: '#FF00FF' }}>{score} PTS</strong></span>
                 </div>
 
                 {/* Rating Card Footer */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '0.5rem 0.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '0.5rem 0.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', zIndex: 2 }}>
                   <span style={{ fontSize: '0.75rem', color: '#a0a0a0' }}>Quest Rating:</span>
-                  <span style={{ fontSize: '0.88rem', color: '#FFD700', fontWeight: 800, letterSpacing: '1px', textShadow: '0 0 5px rgba(255,215,0,0.3)' }}>OVERALL 92 (S-RANK)</span>
+                  <span style={{ fontSize: '0.88rem', color: '#FFD700', fontWeight: 800, letterSpacing: '1px', textShadow: '0 0 5px rgba(255,215,0,0.3)' }}>OVERALL 87 (S-RANK)</span>
                 </div>
               </div>
             </div>
