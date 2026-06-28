@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Target, Zap } from 'lucide-react';
 
@@ -6,6 +6,16 @@ const Details = () => {
   // We'll use a simple state to track mouse position for a dynamic 3D tilt effect on the image
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -54,7 +64,7 @@ const Details = () => {
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center',
-      padding: '5rem 2rem',
+      padding: isMobile ? '3rem 1.2rem' : '5rem 2rem',
       position: 'relative',
       zIndex: 20
     }}>
@@ -63,7 +73,7 @@ const Details = () => {
         width: '100%',
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-        gap: '4rem',
+        gap: isMobile ? '2.5rem' : '4rem',
         alignItems: 'center'
       }}>
         
@@ -139,51 +149,51 @@ const Details = () => {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           style={{
-            padding: '4rem',
+            padding: isMobile ? '2.2rem 1.5rem' : '4rem',
             display: 'flex',
             flexDirection: 'column',
-            gap: '3rem'
+            gap: isMobile ? '2rem' : '3rem'
           }}
         >
-          <motion.div variants={itemVariants} style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#00FFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+          <motion.div variants={itemVariants} style={{ display: 'flex', gap: isMobile ? '1.2rem' : '2rem', alignItems: 'flex-start' }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width={isMobile ? 32 : 40} height={isMobile ? 32 : 40} viewBox="0 0 24 24" fill="none" stroke="#00FFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
               <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
             <div>
-              <h3 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>About Me</h3>
-              <p style={{ fontSize: '1.2rem', color: '#a0a0a0', lineHeight: 1.6 }}>
+              <h3 style={{ fontSize: isMobile ? '1.5rem' : '2rem', marginBottom: '0.5rem' }}>About Me</h3>
+              <p style={{ fontSize: isMobile ? '1.05rem' : '1.2rem', color: '#a0a0a0', lineHeight: 1.6 }}>
                 I am a Unity developer and UI/UX designer focused on building interactive experiences and game systems. I enjoy creating intuitive interfaces, smooth user flows, and visually engaging designs that combine creativity with performance.
               </p>
             </div>
           </motion.div>
 
-          <motion.div variants={itemVariants} style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
-            <MapPin size={40} color="#FF00FF" style={{ flexShrink: 0 }} />
+          <motion.div variants={itemVariants} style={{ display: 'flex', gap: isMobile ? '1.2rem' : '2rem', alignItems: 'flex-start' }}>
+            <MapPin size={isMobile ? 32 : 40} color="#FF00FF" style={{ flexShrink: 0 }} />
             <div>
-              <h3 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Location</h3>
-              <p style={{ fontSize: '1.2rem', color: '#a0a0a0', lineHeight: 1.6 }}>
+              <h3 style={{ fontSize: isMobile ? '1.5rem' : '2rem', marginBottom: '0.5rem' }}>Location</h3>
+              <p style={{ fontSize: isMobile ? '1.05rem' : '1.2rem', color: '#a0a0a0', lineHeight: 1.6 }}>
                 Based in Kerala, India. Working globally on high-impact interactive systems.
               </p>
             </div>
           </motion.div>
 
-          <motion.div variants={itemVariants} style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
-            <Target size={40} color="#00FFFF" style={{ flexShrink: 0 }} />
+          <motion.div variants={itemVariants} style={{ display: 'flex', gap: isMobile ? '1.2rem' : '2rem', alignItems: 'flex-start' }}>
+            <Target size={isMobile ? 32 : 40} color="#00FFFF" style={{ flexShrink: 0 }} />
             <div>
-              <h3 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Focus</h3>
-              <p style={{ fontSize: '1.2rem', color: '#a0a0a0', lineHeight: 1.6 }}>
+              <h3 style={{ fontSize: isMobile ? '1.5rem' : '2rem', marginBottom: '0.5rem' }}>Focus</h3>
+              <p style={{ fontSize: isMobile ? '1.05rem' : '1.2rem', color: '#a0a0a0', lineHeight: 1.6 }}>
                 Bridging complex technical backend logic with highly creative, fluid visual systems. 
                 The intersection where hardcore programming meets beautiful aesthetics.
               </p>
             </div>
           </motion.div>
 
-          <motion.div variants={itemVariants} style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
-            <Zap size={40} color="#FF00FF" style={{ flexShrink: 0 }} />
+          <motion.div variants={itemVariants} style={{ display: 'flex', gap: isMobile ? '1.2rem' : '2rem', alignItems: 'flex-start' }}>
+            <Zap size={isMobile ? 32 : 40} color="#FF00FF" style={{ flexShrink: 0 }} />
             <div>
-              <h3 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Philosophy</h3>
-              <p style={{ fontSize: '1.2rem', color: '#a0a0a0', lineHeight: 1.6 }}>
+              <h3 style={{ fontSize: isMobile ? '1.5rem' : '2rem', marginBottom: '0.5rem' }}>Philosophy</h3>
+              <p style={{ fontSize: isMobile ? '1.05rem' : '1.2rem', color: '#a0a0a0', lineHeight: 1.6 }}>
                 Life isn't about being perfect. It's about iteration: "Build, Reflect, Improve."
               </p>
             </div>

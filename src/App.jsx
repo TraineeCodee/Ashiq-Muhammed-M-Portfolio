@@ -40,11 +40,14 @@ function App() {
           animate={{ opacity: 1, filter: 'blur(0px)' }}
           transition={{ duration: 0.6 }}
           style={{ 
-            fontSize: '1.5rem', 
+            fontSize: 'clamp(1.1rem, 3.5vw, 1.6rem)', 
             color: '#00FFFF', 
             fontFamily: 'Space Grotesk', 
-            letterSpacing: '10px',
-            textShadow: '0 0 20px rgba(0, 255, 255, 0.5)'
+            letterSpacing: 'clamp(4px, 2vw, 10px)',
+            textShadow: '0 0 20px rgba(0, 255, 255, 0.5)',
+            textAlign: 'center',
+            width: '90%',
+            maxWidth: '500px'
           }}
         >
           SYSTEM INITIATING
