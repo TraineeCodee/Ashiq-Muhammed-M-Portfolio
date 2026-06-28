@@ -10,7 +10,7 @@ const Chatbot = () => {
     {
       id: 1,
       sender: 'bot',
-      text: "👋 Welcome to VibeBot! I'm Ashiq's AI dialogue companion. Choose an exploration category from the quest menu below to learn more, or type custom questions!"
+      text: "🤖 AI SYSTEM ONLINE: Welcome to VibeBot. I am Ashiq's natural language dialogue model. Ask me anything, claim hidden XP, or explore options below!"
     }
   ]);
   const [inputText, setInputText] = useState('');
@@ -56,6 +56,44 @@ const Chatbot = () => {
     ]
   };
 
+  // Helper: Simulated Streaming Text
+  const streamBotResponse = (fullText) => {
+    // Add temporary typing state
+    setMessages((prev) => [
+      ...prev,
+      { id: 'typing', sender: 'bot', text: '', isTyping: true }
+    ]);
+
+    setTimeout(() => {
+      const msgId = Date.now();
+      setMessages((prev) => [
+        ...prev.filter((m) => m.id !== 'typing'),
+        { id: msgId, sender: 'bot', text: '' }
+      ]);
+
+      // If it's a JSX object, render it immediately
+      if (typeof fullText !== 'string') {
+        setMessages((prev) =>
+          prev.map((m) => (m.id === msgId ? { ...m, text: fullText } : m))
+        );
+        return;
+      }
+
+      let currentIndex = 0;
+      const interval = setInterval(() => {
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === msgId ? { ...m, text: fullText.slice(0, currentIndex + 1) } : m
+          )
+        );
+        currentIndex++;
+        if (currentIndex >= fullText.length) {
+          clearInterval(interval);
+        }
+      }, 15); // Fast, smooth character typing
+    }, 600); // 600ms delay to simulate "thinking"
+  };
+
   const handleMenuClick = (option) => {
     // Add user message
     const userMsg = {
@@ -74,125 +112,204 @@ const Chatbot = () => {
       );
     }
 
-    // Determine Bot response and next menu state
-    setTimeout(() => {
-      let replyText = '';
-      let nextMenu = currentMenu;
+    let replyText = '';
+    let nextMenu = currentMenu;
 
-      switch (option.action) {
-        // Main categories transitions
-        case 'menu_profile':
-          replyText = "🧑 Quest: Profile Info unlocked! Select a topic to learn more about Ashiq's background:";
-          nextMenu = 'profile';
-          break;
-        case 'menu_skills':
-          replyText = "🛠️ Quest: Skills & Tech stack unlocked! Select a skill block to inspect:";
-          nextMenu = 'skills';
-          break;
-        case 'menu_works':
-          replyText = "🎮 Quest: Works & Projects unlocked! Access direct asset/code links below:";
-          nextMenu = 'works';
-          break;
-        case 'menu_secrets':
-          replyText = "🔑 Quest: Secrets unlocked! Claim secret codes or get instructions to level up:";
-          nextMenu = 'secrets';
-          break;
+    switch (option.action) {
+      // Main categories transitions
+      case 'menu_profile':
+        replyText = "🧑 Quest: Profile Info unlocked! Select a topic to learn more about Ashiq's background:";
+        nextMenu = 'profile';
+        break;
+      case 'menu_skills':
+        replyText = "🛠️ Quest: Skills & Tech stack unlocked! Select a skill block to inspect:";
+        nextMenu = 'skills';
+        break;
+      case 'menu_works':
+        replyText = "🎮 Quest: Works & Projects unlocked! Access direct asset/code links below:";
+        nextMenu = 'works';
+        break;
+      case 'menu_secrets':
+        replyText = "🔑 Quest: Secrets unlocked! Claim secret codes or get instructions to level up:";
+        nextMenu = 'secrets';
+        break;
 
-        // Profile category replies
-        case 'about_ashiq':
-          replyText = "👤 Ashiq Muhammed M is a Unity Game Developer and Graphic/UI Designer. He bridges technical backend systems (C# scripting, mechanics) with gorgeous front-end design aesthetics.";
-          break;
-        case 'why_hire':
-          replyText = "🤝 Why Hire Ashiq? He is a Unity Cinemachine & Timeline cinematic expert, specializes in low-poly 3D assets/animations, and has a professional philosophy of 'Build, Reflect, Improve' to deliver polished products.";
-          break;
-        case 'location':
-          replyText = "📍 Ashiq is based in Kerala, India, and works with clients globally on high-end interactive games and applications.";
-          break;
+      // Profile category replies
+      case 'about_ashiq':
+        replyText = "👤 Ashiq Muhammed M is a Unity Game Developer and Graphic/UI Designer. He bridges technical backend systems (C# scripting, mechanics) with gorgeous front-end design aesthetics.";
+        break;
+      case 'why_hire':
+        replyText = "🤝 Why Hire Ashiq? He is a Unity Cinemachine & Timeline cinematic expert, specializes in low-poly 3D assets/animations, and has a professional philosophy of 'Build, Reflect, Improve' to deliver polished products.";
+        break;
+      case 'location':
+        replyText = "📍 Ashiq is based in Kerala, India, and works with clients globally on high-end interactive games and applications.";
+        break;
 
-        // Skills category replies
-        case 'skill_unity':
-          replyText = "🎮 Unity Specialist: Expert in C# gameplay architectures, scripting custom mechanics, and managing complex camera systems (Cinemachine) and cinematics (Timeline).";
-          break;
-        case 'skill_design':
-          replyText = "🎨 Design Expertise: Highly proficient in Figma for wireframing/mockups, and Adobe Photoshop for digital art/UI assets.";
-          break;
-        case 'skill_techart':
-          replyText = "📦 Technical Art: Experienced in Low-poly 3D modeling, integrating animation rigs, and designing responsive gamified HUD interfaces.";
-          break;
+      // Skills category replies
+      case 'skill_unity':
+        replyText = "🎮 Unity Specialist: Expert in C# gameplay architectures, scripting custom mechanics, and managing complex camera systems (Cinemachine) and cinematics (Timeline).";
+        break;
+      case 'skill_design':
+        replyText = "🎨 Design Expertise: Highly proficient in Figma for wireframing/mockups, and Adobe Photoshop for digital art/UI assets.";
+        break;
+      case 'skill_techart':
+        replyText = "📦 Technical Art: Experienced in Low-poly 3D modeling, integrating animation rigs, and designing responsive gamified HUD interfaces.";
+        break;
 
-        // Links category replies
-        case 'link_github':
-          replyText = (
-            <div>
-              💻 Inspect Ashiq's source code repositories on GitHub:
-              <br /><br />
-              <a 
-                href="https://github.com/TraineeCodee?tab=repositories" 
-                target="_blank" 
-                rel="noreferrer" 
-                style={{ color: '#00FFFF', textDecoration: 'underline', fontWeight: 700, cursor: 'none' }}
-              >
-                GitHub Repositories List →
-              </a>
-            </div>
+      // Links category replies
+      case 'link_github':
+        replyText = (
+          <div>
+            💻 Inspect Ashiq's source code repositories on GitHub:
+            <br /><br />
+            <a 
+              href="https://github.com/TraineeCodee?tab=repositories" 
+              target="_blank" 
+              rel="noreferrer" 
+              style={{ color: '#00FFFF', textDecoration: 'underline', fontWeight: 700, cursor: 'none' }}
+            >
+              GitHub Repositories List →
+            </a>
+          </div>
+        );
+        break;
+      case 'link_drive':
+        replyText = (
+          <div>
+            📁 Inspect Ashiq's digital designs and art samples:
+            <br /><br />
+            <a 
+              href="https://drive.google.com/drive/folders/1u8LKZf7xujbc5mO9N8Hq7Yb-a9JoJdND?usp=drive_link" 
+              target="_blank" 
+              rel="noreferrer" 
+              style={{ color: '#FF00FF', textDecoration: 'underline', fontWeight: 700, cursor: 'none' }}
+            >
+              Google Drive Portfolio Samples →
+            </a>
+          </div>
+        );
+        break;
+
+      // Secrets category replies
+      case 'claim_xp':
+        if (xpClaimed) {
+          replyText = "🔑 You have already claimed this secret quest XP reward! Keep dragging the cursor to find more gems!";
+        } else {
+          setXpClaimed(true);
+          window.dispatchEvent(
+            new CustomEvent('add_cursor_xp', {
+              detail: { amount: 50, text: 'Secret Claimed! +50 XP 🚀' }
+            })
           );
-          break;
-        case 'link_drive':
-          replyText = (
-            <div>
-              📁 Inspect Ashiq's digital designs and art samples:
-              <br /><br />
-              <a 
-                href="https://drive.google.com/drive/folders/1u8LKZf7xujbc5mO9N8Hq7Yb-a9JoJdND?usp=drive_link" 
-                target="_blank" 
-                rel="noreferrer" 
-                style={{ color: '#FF00FF', textDecoration: 'underline', fontWeight: 700, cursor: 'none' }}
-              >
-                Google Drive Portfolio Samples →
-              </a>
-            </div>
-          );
-          break;
-
-        // Secrets category replies
-        case 'claim_xp':
-          if (xpClaimed) {
-            replyText = "🔑 You have already claimed this secret quest XP reward! Keep dragging the cursor to find more gems!";
-          } else {
-            setXpClaimed(true);
-            window.dispatchEvent(
-              new CustomEvent('add_cursor_xp', {
-                detail: { amount: 50, text: 'Secret Claimed! +50 XP 🚀' }
-              })
-            );
-            replyText = "🎉 SECRET QUEST UNLOCKED: Cheat Code 'VIBECODER777' activated! +50 XP successfully awarded to your Custom Cursor stats! level up in the bottom-right corner!";
-          }
-          break;
-        case 'cursor_help':
-          replyText = "❓ Cursor Game Info:\n1. Drag mouse/finger to draw glowing particle trails.\n2. Collect floating diamond gems to get +20 XP (they are magnetically attracted when close).\n3. Hover over links/cards to trigger multiplier combos!";
-          break;
-
-        // Back to main
-        case 'back_main':
-          replyText = "🏠 Returned to Main Menu. Inspect another quest block:";
-          nextMenu = 'main';
-          break;
-
-        default:
-          replyText = "Dialog error. Resetting menu...";
-          nextMenu = 'main';
-      }
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now() + 1,
-          sender: 'bot',
-          text: replyText
+          replyText = "🎉 SECRET QUEST UNLOCKED: Cheat Code 'VIBECODER777' activated! +50 XP successfully awarded to your Custom Cursor stats! level up in the bottom-right corner!";
         }
-      ]);
-      setCurrentMenu(nextMenu);
-    }, 550);
+        break;
+      case 'cursor_help':
+        replyText = "❓ Cursor Game Info:\n1. Drag mouse/finger to draw glowing particle trails.\n2. Collect floating diamond gems to get +20 XP (they are magnetically attracted when close).\n3. Hover over links/cards to trigger multiplier combos!";
+        break;
+
+      // Back to main
+      case 'back_main':
+        replyText = "🏠 Returned to Main Menu. Inspect another quest block:";
+        nextMenu = 'main';
+        break;
+
+      default:
+        replyText = "Dialog error. Resetting menu...";
+        nextMenu = 'main';
+    }
+
+    streamBotResponse(replyText);
+    setCurrentMenu(nextMenu);
+  };
+
+  // Advanced natural-language intent parser
+  const getIntelligentReply = (query) => {
+    // Random elements to make response feel fresh and non-robotic
+    const greetingsIntros = ["Hello Player! 👾", "Hey! 🚀", "Greetings explorer!", "Welcome! 👋"];
+    const greetingsOutros = ["How can I help you on your quest today?", "What would you like to inspect?", "Ask me anything!"];
+    
+    const randomGreetIntro = greetingsIntros[Math.floor(Math.random() * greetingsIntros.length)];
+    const randomGreetOutro = greetingsOutros[Math.floor(Math.random() * greetingsOutros.length)];
+
+    // Normalize input
+    const text = query.trim().toLowerCase();
+
+    // 1. Secrets / Cheat code
+    if (text.includes('cheat') || text.includes('secret') || text.includes('code') || text.includes('xp') || text.includes('777')) {
+      if (xpClaimed) {
+        return "🔑 You have already claimed your secret quest reward! Explore other buttons to raise your score!";
+      }
+      setXpClaimed(true);
+      window.dispatchEvent(
+        new CustomEvent('add_cursor_xp', {
+          detail: { amount: 50, text: 'Secret Claimed! +50 XP 🚀' }
+        })
+      );
+      return "🎉 SECRET UNLOCKED! You found the hidden trigger! I have dispatched +50 XP to your custom cursor levels. Watch the bar level-up in the bottom-right corner!";
+    }
+
+    // 2. Projects & Links
+    if (text.includes('project') || text.includes('game') || text.includes('work') || text.includes('drive') || text.includes('github') || text.includes('link') || text.includes('sample')) {
+      return (
+        <div>
+          🎮 Ashiq specializes in creating detailed 3D games and technical art.
+          <br /><br />
+          Access his works:
+          <div style={{ marginTop: '0.8rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            <a 
+              href="https://github.com/TraineeCodee?tab=repositories" 
+              target="_blank" 
+              rel="noreferrer" 
+              style={{ color: '#00FFFF', textDecoration: 'underline', fontWeight: 600, cursor: 'none' }}
+            >
+              GitHub Code Repositories 💻
+            </a>
+            <a 
+              href="https://drive.google.com/drive/folders/1u8LKZf7xujbc5mO9N8Hq7Yb-a9JoJdND?usp=drive_link" 
+              target="_blank" 
+              rel="noreferrer" 
+              style={{ color: '#FF00FF', textDecoration: 'underline', fontWeight: 600, cursor: 'none' }}
+            >
+              Google Drive Design Samples 📁
+            </a>
+          </div>
+        </div>
+      );
+    }
+
+    // 3. Contacts
+    if (text.includes('contact') || text.includes('hire') || text.includes('email') || text.includes('phone') || text.includes('mail') || text.includes('number') || text.includes('locate') || text.includes('kerala')) {
+      return (
+        <div>
+          ✉️ Let's connect!
+          <br /><br />
+          Email: <a href="mailto:ashiq.muhammed.designer@gmail.com" style={{ color: '#00FFFF', textDecoration: 'underline', cursor: 'none' }}>ashiq.muhammed.designer@gmail.com</a>
+          <br />
+          Phone: <a href="tel:+918848427429" style={{ color: '#FF00FF', textDecoration: 'underline', cursor: 'none' }}>+91 88484 27429</a>
+          <br /><br />
+          Based in Kerala, India. Working globally!
+        </div>
+      );
+    }
+
+    // 4. Skills & Tech
+    if (text.includes('skill') || text.includes('expert') || text.includes('unity') || text.includes('c#') || text.includes('design') || text.includes('figma') || text.includes('photoshop') || text.includes('shader') || text.includes('art')) {
+      return "🛠️ Ashiq's technical expertise: Unity Gameplay Systems, advanced C# scripting, Cinemachine camera dynamics, Timeline cinematics, Figma mockups, and Adobe Photoshop designs. Use the 'Skills & Tech' option below to explore details!";
+    }
+
+    // 5. About / Identity
+    if (text.includes('who') || text.includes('about') || text.includes('name') || text.includes('ashiq') || text.includes('bio')) {
+      return "👤 Ashiq Muhammed M is a Unity Game Developer and Graphic/UI Designer. He bridges technical backend systems (C# scripting, mechanics) with gorgeous front-end design aesthetics. Select 'Profile & Info' for details!";
+    }
+
+    // 6. Greetings
+    if (text.includes('hi') || text.includes('hello') || text.includes('hey') || text.includes('yo') || text.includes('greetings')) {
+      return `${randomGreetIntro} I am VibeBot, ready to answer questions about Ashiq's portfolio. ${randomGreetOutro}`;
+    }
+
+    // Default fallbacks
+    return "🧠 I've processed your message, but it didn't match any specific portfolio keyword. Feel free to type about 'skills', 'projects', 'contact' or use the quest categories below to navigate!";
   };
 
   const handleCustomSend = (e) => {
@@ -208,60 +325,9 @@ const Chatbot = () => {
     setMessages((prev) => [...prev, userMsg]);
     setInputText('');
 
-    // Trigger AI custom query parser
-    setTimeout(() => {
-      const query = userText.toLowerCase();
-      let replyText = '';
-
-      if (query.includes('skill') || query.includes('expert') || query.includes('unity') || query.includes('c#') || query.includes('design')) {
-        replyText = "🛠️ Ashiq specializes in Unity (C# Gameplay & Mechanics), Figma/Photoshop Design, low-poly 3D modeling, and timeline animation systems. Select 'Skills & Tech' in the menu below to examine details!";
-      } else if (query.includes('project') || query.includes('game') || query.includes('work') || query.includes('drive') || query.includes('github')) {
-        replyText = (
-          <div>
-            🎮 Projects & Works can be accessed using these links:
-            <br /><br />
-            1. <a href="https://github.com/TraineeCodee?tab=repositories" target="_blank" rel="noreferrer" style={{ color: '#00FFFF', textDecoration: 'underline', cursor: 'none' }}>GitHub Code List</a>
-            <br />
-            2. <a href="https://drive.google.com/drive/folders/1u8LKZf7xujbc5mO9N8Hq7Yb-a9JoJdND?usp=drive_link" target="_blank" rel="noreferrer" style={{ color: '#FF00FF', textDecoration: 'underline', cursor: 'none' }}>Drive Design Samples</a>
-          </div>
-        );
-      } else if (query.includes('contact') || query.includes('hire') || query.includes('email') || query.includes('phone') || query.includes('mail')) {
-        replyText = (
-          <div>
-            ✉️ Contact info:
-            <br />
-            Email: <a href="mailto:ashiq.muhammed.designer@gmail.com" style={{ color: '#00FFFF', textDecoration: 'underline', cursor: 'none' }}>ashiq.muhammed.designer@gmail.com</a>
-            <br />
-            Phone: <a href="tel:+918848427429" style={{ color: '#FF00FF', textDecoration: 'underline', cursor: 'none' }}>+91 88484 27429</a>
-          </div>
-        );
-      } else if (query.includes('cheat') || query.includes('secret') || query.includes('code') || query.includes('xp')) {
-        if (xpClaimed) {
-          replyText = "🔑 You have already claimed this secret quest XP reward! Keep dragging the cursor to find more gems!";
-        } else {
-          setXpClaimed(true);
-          window.dispatchEvent(
-            new CustomEvent('add_cursor_xp', {
-              detail: { amount: 50, text: 'Secret Claimed! +50 XP 🚀' }
-            })
-          );
-          replyText = "🎉 SECRET QUEST UNLOCKED: Cheat Code activated! +50 XP successfully awarded to your Custom Cursor stats!";
-        }
-      } else if (query.includes('hi') || query.includes('hello') || query.includes('hey') || query.includes('yo')) {
-        replyText = "👾 Hello Player! How can I assist you on Ashiq's interactive quest today?";
-      } else {
-        replyText = "I'm parsing your query, but for specific info you can also use the structured Quest options below!";
-      }
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now() + 1,
-          sender: 'bot',
-          text: replyText
-        }
-      ]);
-    }, 600);
+    // Stream reply from natural-language model
+    const replyText = getIntelligentReply(userText);
+    streamBotResponse(replyText);
   };
 
   return (
@@ -368,7 +434,7 @@ const Chatbot = () => {
                 <Bot size={22} color="#00FFFF" style={{ filter: 'drop-shadow(0 0 4px rgba(0,255,255,0.4))' }} />
                 <div>
                   <h4 style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: 700 }}>VibeBot</h4>
-                  <span style={{ color: '#00FFFF', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>RPG Dialogue Companion</span>
+                  <span style={{ color: '#00FFFF', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>AI Companion</span>
                 </div>
               </div>
               <button 
@@ -403,10 +469,21 @@ const Chatbot = () => {
                     fontSize: '0.88rem',
                     lineHeight: 1.45,
                     whiteSpace: 'pre-line',
-                    wordBreak: 'break-word'
+                    wordBreak: 'break-word',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
                   }}
                 >
-                  {msg.text}
+                  {msg.isTyping ? (
+                    <div style={{ display: 'flex', gap: '0.3rem', padding: '0.2rem 0', alignSelf: 'flex-start' }}>
+                      <motion.div animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0 }} style={{ width: '6px', height: '6px', background: '#00FFFF', borderRadius: '50%' }} />
+                      <motion.div animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.15 }} style={{ width: '6px', height: '6px', background: '#00FFFF', borderRadius: '50%' }} />
+                      <motion.div animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.3 }} style={{ width: '6px', height: '6px', background: '#00FFFF', borderRadius: '50%' }} />
+                    </div>
+                  ) : (
+                    msg.text
+                  )}
                 </div>
               ))}
               <div ref={messagesEndRef} />
@@ -469,7 +546,7 @@ const Chatbot = () => {
                 type="text"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                placeholder="Type custom questions..."
+                placeholder="Ask about skills, projects..."
                 style={{
                   flex: 1,
                   background: 'rgba(255,255,255,0.02)',
