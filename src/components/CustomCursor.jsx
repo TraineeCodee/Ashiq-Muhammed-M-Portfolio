@@ -18,11 +18,17 @@ const CustomCursor = () => {
   const [gems, setGems] = useState([]);
   const [popups, setPopups] = useState([]);
   const [combo, setCombo] = useState(0);
+  const [isTouch, setIsTouch] = useState(false);
 
   const lastPos = useRef({ x: 0, y: 0 });
   const loopRef = useRef(null);
   const gemsRef = useRef([]);
   const comboTimer = useRef(null);
+
+  // Detect touch screen capabilities on mount
+  useEffect(() => {
+    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  }, []);
 
   // Sync ref with state for use inside animation loop
   useEffect(() => {
@@ -108,39 +114,62 @@ const CustomCursor = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Mouse Move tracking & Particle Spawning
+  // Mouse Move & Touch Move tracking & Particle Spawning
   useEffect(() => {
-    const updateMouse = (e) => {
-      const x = e.clientX;
-      const y = e.clientY;
+    const handleMove = (x, y) => {
       setPosition({ x, y });
 
-      // Spawn trail particle if mouse moves far enough
+      // Spawn trail particle if pointer moves far enough
       const dist = Math.hypot(x - lastPos.current.x, y - lastPos.current.y);
-      if (dist > 20) {
+      const minDistance = isTouch ? 25 : 20; // higher distance threshold on touch
+      
+      if (dist > minDistance) {
         const id = Math.random();
         const p = {
           id,
           x,
           y,
           color: Math.random() > 0.5 ? '#00FFFF' : '#FF00FF',
-          size: Math.random() * 6 + 3,
-          maxLife: 25,
-          life: 25
+          size: Math.random() * (isTouch ? 5 : 6) + 3,
+          maxLife: isTouch ? 18 : 25, // shorter life on touch to save CPU
+          life: isTouch ? 18 : 25
         };
-        setParticles((prev) => [...prev.slice(-25), p]); // cap at 25 particles
+        setParticles((prev) => [...prev.slice(isTouch ? -12 : -25), p]); // cap lower on touch
         lastPos.current = { x, y };
 
-        // Award trace points for exploring
-        if (Math.random() > 0.95) {
+        // Award trace points for exploring (rarely, to keep game feel balanced)
+        if (Math.random() > (isTouch ? 0.97 : 0.95)) {
           addXp(1, '+1 Move XP');
         }
       }
     };
 
-    window.addEventListener('mousemove', updateMouse);
-    return () => window.removeEventListener('mousemove', updateMouse);
-  }, [position]);
+    const onMouseMove = (e) => {
+      handleMove(e.clientX, e.clientY);
+    };
+
+    const onTouchMove = (e) => {
+      if (e.touches && e.touches[0]) {
+        handleMove(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
+    if (isTouch) {
+      window.addEventListener('touchstart', onTouchMove);
+      window.addEventListener('touchmove', onTouchMove);
+    } else {
+      window.addEventListener('mousemove', onMouseMove);
+    }
+
+    return () => {
+      if (isTouch) {
+        window.removeEventListener('touchstart', onTouchMove);
+        window.removeEventListener('touchmove', onTouchMove);
+      } else {
+        window.removeEventListener('mousemove', onMouseMove);
+      }
+    };
+  }, [position, isTouch]);
 
   // Hook hover rewards to elements
   useEffect(() => {
@@ -260,12 +289,14 @@ const CustomCursor = () => {
 
   return (
     <>
-      {/* Global CSS to disable default cursor in dashboard / interactive states */}
-      <style>{`
-        body, a, button, [role="button"] {
-          cursor: none !important;
-        }
-      `}</style>
+      {/* Global CSS to disable default cursor ONLY on non-touch (mouse) devices */}
+      {!isTouch && (
+        <style>{`
+          body, a, button, [role="button"] {
+            cursor: none !important;
+          }
+        `}</style>
+      )}
 
       {/* 1. Gaming HUD display in bottom-right corner */}
       <div 
@@ -324,34 +355,36 @@ const CustomCursor = () => {
         )}
       </div>
 
-      {/* 2. Custom Gamepad Pointer */}
-      <div
-        style={{
-          position: 'fixed',
-          left: 0,
-          top: 0,
-          transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
-          pointerEvents: 'none',
-          zIndex: 999999,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          transition: 'transform 0.05s ease-out'
-        }}
-      >
-        {/* Glowing Cursor Center */}
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
-          <Gamepad2 
-            size={26} 
-            color={combo > 2 ? '#FF00FF' : '#00FFFF'} 
-            style={{ 
-              transform: 'translate(-50%, -50%)',
-              filter: `drop-shadow(0 0 8px ${combo > 2 ? '#FF00FF' : '#00FFFF'})`,
-              transition: 'color 0.2s'
-            }} 
-          />
+      {/* 2. Custom Gamepad Pointer (only on desktop/mouse devices) */}
+      {!isTouch && (
+        <div
+          style={{
+            position: 'fixed',
+            left: 0,
+            top: 0,
+            transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
+            pointerEvents: 'none',
+            zIndex: 999999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'transform 0.05s ease-out'
+          }}
+        >
+          {/* Glowing Cursor Center */}
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
+            <Gamepad2 
+              size={26} 
+              color={combo > 2 ? '#FF00FF' : '#00FFFF'} 
+              style={{ 
+                transform: 'translate(-50%, -50%)',
+                filter: `drop-shadow(0 0 8px ${combo > 2 ? '#FF00FF' : '#00FFFF'})`,
+                transition: 'color 0.2s'
+              }} 
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 3. Glowing XP Trace Particles */}
       {particles.map((p) => (

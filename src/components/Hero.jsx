@@ -1,14 +1,31 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 
-const frameCount = 96;
-const currentFrame = (index) => `${import.meta.env.BASE_URL}images/herosection/ezgif-frame-${index.toString().padStart(3, '0')}.webp`;
-
 const Hero = () => {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const lastDrawnIndexRef = useRef(-1);
   const [images, setImages] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile/touch device on mount
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const effectiveFrameCount = isMobile ? 48 : 96;
+
+  const getFrameUrl = (index) => {
+    // If mobile, map 1-48 to even index frames (2, 4, ..., 96)
+    const frameNum = isMobile ? index * 2 : index;
+    const safeFrameNum = Math.min(96, Math.max(1, frameNum));
+    return `${import.meta.env.BASE_URL}images/herosection/ezgif-frame-${safeFrameNum.toString().padStart(3, '0')}.webp`;
+  };
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -36,7 +53,7 @@ const Hero = () => {
 
   // Preload images progressively in batches
   useEffect(() => {
-    const loadedImages = new Array(frameCount);
+    const loadedImages = new Array(effectiveFrameCount);
     let isCancelled = false;
 
     const loadImage = (i) => {
@@ -46,7 +63,7 @@ const Hero = () => {
           return;
         }
         const img = new Image();
-        img.src = currentFrame(i);
+        img.src = getFrameUrl(i);
         img.onload = () => {
           if (isCancelled) {
             resolve(null);
@@ -56,7 +73,7 @@ const Hero = () => {
           
           // Draw if this is the active frame
           const currentProgress = scrollYProgress ? scrollYProgress.get() : 0;
-          const expectedIndex = Math.min(frameCount - 1, Math.floor(currentProgress * frameCount));
+          const expectedIndex = Math.min(effectiveFrameCount - 1, Math.floor(currentProgress * effectiveFrameCount));
           if (i - 1 === expectedIndex) {
             requestAnimationFrame(() => {
               const drawn = drawImage(img);
@@ -79,10 +96,10 @@ const Hero = () => {
 
       // 2. Load the rest in small batches of 6
       const batchSize = 6;
-      for (let i = 2; i <= frameCount; i += batchSize) {
+      for (let i = 2; i <= effectiveFrameCount; i += batchSize) {
         if (isCancelled) break;
         const promises = [];
-        for (let j = 0; j < batchSize && (i + j) <= frameCount; j++) {
+        for (let j = 0; j < batchSize && (i + j) <= effectiveFrameCount; j++) {
           promises.push(loadImage(i + j));
         }
         await Promise.all(promises);
@@ -96,16 +113,16 @@ const Hero = () => {
     return () => {
       isCancelled = true;
     };
-  }, [scrollYProgress]);
+  }, [scrollYProgress, isMobile]);
 
   // When scroll changes, update canvas
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (images.length === 0) return;
     
-    // Calculate frame index (0 to 95)
+    // Calculate frame index (0 to effectiveFrameCount - 1)
     const frameIndex = Math.min(
-      frameCount - 1,
-      Math.floor(latest * frameCount)
+      effectiveFrameCount - 1,
+      Math.floor(latest * effectiveFrameCount)
     );
 
     if (lastDrawnIndexRef.current !== frameIndex) {
@@ -129,7 +146,7 @@ const Hero = () => {
         // Redraw current frame on resize
         if (images.length > 0) {
           const currentProgress = scrollYProgress.get();
-          const frameIndex = Math.min(frameCount - 1, Math.floor(currentProgress * frameCount));
+          const frameIndex = Math.min(effectiveFrameCount - 1, Math.floor(currentProgress * effectiveFrameCount));
           if (images[frameIndex]) {
             drawImage(images[frameIndex]);
           }
