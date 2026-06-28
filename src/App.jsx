@@ -19,6 +19,15 @@ function App() {
   const [isStarted, setIsStarted] = useState(false);
   const [coins, setCoins] = useState([]);
   const [coinsCollected, setCoinsCollected] = useState(0);
+  const progressRef = useRef(0);
+
+  // Sync ref with progress changes to prevent stale closures
+  useEffect(() => {
+    progressRef.current = progress;
+    if (progress >= 100) {
+      setCoins([]);
+    }
+  }, [progress]);
 
   // Progressive background loading simulation (snappy load rate)
   useEffect(() => {
@@ -36,12 +45,19 @@ function App() {
 
   // Spawn pixel coins during load screen
   useEffect(() => {
-    if (progress >= 100 || isStarted) {
+    if (isStarted) {
       setCoins([]);
       return;
     }
 
     const spawnInterval = setInterval(() => {
+      // Clear interval if progress reaches 100
+      if (progressRef.current >= 100) {
+        clearInterval(spawnInterval);
+        setCoins([]);
+        return;
+      }
+
       // Limit active coins on screen to 5
       setCoins((prev) => {
         if (prev.length >= 5) return prev;
@@ -56,7 +72,7 @@ function App() {
     }, 1000); // spawn fast to keep up with loading speed
 
     return () => clearInterval(spawnInterval);
-  }, [progress, isStarted]);
+  }, [isStarted]);
 
   const handleCoinClick = (coinId, coinXp) => {
     setCoins((prev) => prev.filter((c) => c.id !== coinId));
