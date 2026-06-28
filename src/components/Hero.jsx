@@ -192,29 +192,29 @@ const Hero = () => {
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
           
           {/* Initial Title */}
-          <motion.div style={{ position: 'absolute', opacity: titleOpacity, y: titleY, scale: titleScale, textAlign: 'center' }}>
-            <h1 style={{ fontSize: '7vw', fontWeight: 800, letterSpacing: '-2px', background: 'linear-gradient(to right, #ffffff, #a0a0a0)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          <motion.div style={{ position: 'absolute', opacity: titleOpacity, y: titleY, scale: titleScale, textAlign: 'center', width: '90%', maxWidth: '800px' }}>
+            <h1 style={{ fontSize: 'clamp(2.2rem, 6vw, 5.5rem)', fontWeight: 800, letterSpacing: '-2px', background: 'linear-gradient(to right, #ffffff, #a0a0a0)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight: 1.1 }}>
               Ashiq Muhammed M
             </h1>
-            <p style={{ color: '#a0a0a0', fontSize: '1.5vw', marginTop: '1rem' }}>Scroll to experience</p>
+            <p style={{ color: '#a0a0a0', fontSize: 'clamp(0.95rem, 1.5vw, 1.4rem)', marginTop: '1.2rem', letterSpacing: '2px', textTransform: 'uppercase' }}>Scroll to experience</p>
           </motion.div>
 
           {/* Mid Scroll Text */}
-          <motion.div style={{ position: 'absolute', opacity: subtitleOpacity, scale: subtitleScale, y: subtitleY, textAlign: 'center' }}>
-            <h2 style={{ fontSize: '5vw', color: '#00FFFF', fontWeight: 700, textShadow: '0 0 30px rgba(0, 255, 255, 0.5)' }}>
+          <motion.div style={{ position: 'absolute', opacity: subtitleOpacity, scale: subtitleScale, y: subtitleY, textAlign: 'center', width: '90%', maxWidth: '800px' }}>
+            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 4.5rem)', color: '#00FFFF', fontWeight: 700, textShadow: '0 0 30px rgba(0, 255, 255, 0.5)', lineHeight: 1.1 }}>
               Unity Developer
             </h2>
-            <h2 style={{ fontSize: '4vw', color: '#ffffff', fontWeight: 400, marginTop: '0.5rem' }}>
+            <h2 style={{ fontSize: 'clamp(1.6rem, 4vw, 3.5rem)', color: '#ffffff', fontWeight: 400, marginTop: '0.5rem', lineHeight: 1.1 }}>
               & Graphic Designer
             </h2>
           </motion.div>
 
           {/* End Scroll Text */}
-          <motion.div style={{ position: 'absolute', opacity: featureOpacity, y: featureY, scale: featureScale, textAlign: 'center' }}>
-            <h2 style={{ fontSize: '6vw', color: '#FF00FF', fontWeight: 800, textShadow: '0 0 40px rgba(255, 0, 255, 0.5)' }}>
+          <motion.div style={{ position: 'absolute', opacity: featureOpacity, y: featureY, scale: featureScale, textAlign: 'center', width: '90%', maxWidth: '800px' }}>
+            <h2 style={{ fontSize: 'clamp(2.2rem, 5.5vw, 5rem)', color: '#FF00FF', fontWeight: 800, textShadow: '0 0 40px rgba(255, 0, 255, 0.5)', lineHeight: 1.1 }}>
               The Vibe Coder
             </h2>
-            <p style={{ fontSize: '2vw', color: '#fff', marginTop: '1rem', fontWeight: 300 }}>
+            <p style={{ fontSize: 'clamp(1rem, 1.8vw, 1.6rem)', color: '#fff', marginTop: '1rem', fontWeight: 300, lineHeight: 1.4 }}>
               Bridging logic with creative visual systems.
             </p>
           </motion.div>
