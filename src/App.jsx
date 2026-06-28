@@ -84,9 +84,54 @@ function App() {
             {progress}%
           </div>
 
-          {/* Progress bar */}
-          <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden', border: '1px solid rgba(0,255,255,0.1)' }}>
-            <div style={{ width: `${progress}%`, height: '100%', background: 'linear-gradient(to right, #00FFFF, #FF00FF)', transition: 'width 0.15s ease-out' }} />
+          {/* Progress bar with pixel invader riding it */}
+          <div style={{ width: '100%', position: 'relative', marginTop: '1.5rem' }}>
+            {/* Pixel Space Invader */}
+            <motion.div
+              style={{
+                position: 'absolute',
+                bottom: '18px',
+                left: `${progress}%`,
+                transform: 'translateX(-50%)',
+                transition: 'left 0.15s ease-out',
+                pointerEvents: 'none'
+              }}
+              animate={{ y: [0, -6, 0] }}
+              transition={{ repeat: Infinity, duration: 0.5, ease: 'easeInOut' }}
+            >
+              <svg width="24" height="18" viewBox="0 0 11 8" fill="#00FFFF" style={{ filter: 'drop-shadow(0 0 6px rgba(0, 255, 255, 0.8))' }}>
+                <rect x="2" y="0" width="1" height="1" />
+                <rect x="8" y="0" width="1" height="1" />
+                <rect x="3" y="1" width="1" height="1" />
+                <rect x="7" y="1" width="1" height="1" />
+                <rect x="2" y="2" width="7" height="1" />
+                <rect x="1" y="3" width="2" height="1" />
+                <rect x="4" y="3" width="3" height="1" />
+                <rect x="8" y="3" width="2" height="1" />
+                <rect x="0" y="4" width="11" height="1" />
+                <rect x="0" y="5" width="1" height="1" />
+                <rect x="2" y="5" width="7" height="1" />
+                <rect x="10" y="5" width="1" height="1" />
+                <rect x="0" y="6" width="1" height="1" />
+                <rect x="2" y="6" width="1" height="1" />
+                <rect x="8" y="6" width="1" height="1" />
+                <rect x="10" y="6" width="1" height="1" />
+                <rect x="3" y="7" width="2" height="1" />
+                <rect x="6" y="7" width="2" height="1" />
+              </svg>
+            </motion.div>
+
+            {/* Retro LED Block Progress Bar */}
+            <div style={{ width: '100%', height: '14px', background: 'rgba(255,255,255,0.03)', border: '2px solid rgba(0,255,255,0.2)', padding: '2px', display: 'flex', alignItems: 'center' }}>
+              <div 
+                style={{ 
+                  width: `${progress}%`, 
+                  height: '100%', 
+                  backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 6px, #050505 6px, #050505 8px), linear-gradient(to right, #00FFFF, #FF00FF)`,
+                  transition: 'width 0.15s ease-out' 
+                }} 
+              />
+            </div>
           </div>
         </div>
 
