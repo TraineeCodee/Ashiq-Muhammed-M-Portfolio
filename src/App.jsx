@@ -20,16 +20,16 @@ function App() {
   const [coins, setCoins] = useState([]);
   const [coinsCollected, setCoinsCollected] = useState(0);
 
-  // Progressive background loading simulation (slower for active clicker quest)
+  // Progressive background loading simulation (snappy load rate)
   useEffect(() => {
     let timer;
     if (progress < 100) {
       timer = setTimeout(() => {
         setProgress((prev) => {
-          const increment = Math.floor(Math.random() * 3) + 1; // 1% to 3%
+          const increment = Math.floor(Math.random() * 4) + 2; // 2% to 5%
           return Math.min(100, prev + increment);
         });
-      }, Math.random() * 100 + 120); // 120ms to 220ms (average 170ms)
+      }, Math.random() * 100 + 80); // 80ms to 180ms (average 130ms)
     }
     return () => clearTimeout(timer);
   }, [progress]);
@@ -53,7 +53,7 @@ function App() {
         };
         return [...prev, newCoin];
       });
-    }, 1100); // spawn slightly faster to match slow load
+    }, 1000); // spawn fast to keep up with loading speed
 
     return () => clearInterval(spawnInterval);
   }, [progress, isStarted]);
@@ -61,7 +61,7 @@ function App() {
   const handleCoinClick = (coinId, coinXp) => {
     setCoins((prev) => prev.filter((c) => c.id !== coinId));
     setCoinsCollected((prev) => prev + 1);
-    setProgress((p) => Math.min(100, p + 8)); // Boosts loading speed by 8% per coin!
+    setProgress((p) => Math.min(100, p + 12)); // Boosts loading speed by 12% per coin!
 
     // Dispatch XP reward to the custom cursor stats!
     window.dispatchEvent(
@@ -115,6 +115,24 @@ function App() {
           animate={{ x: [60, -60, 60], y: [30, -30, 30] }}
           transition={{ repeat: Infinity, duration: 15, ease: 'easeInOut' }}
           style={{ position: 'absolute', width: '380px', height: '380px', borderRadius: '50%', background: 'rgba(255, 0, 255, 0.05)', filter: 'blur(90px)', bottom: '10%', right: '10%', pointerEvents: 'none', zIndex: 1 }}
+        />
+
+        {/* Scrolling Grid Background (Tron/Cyberpunk aesthetics) */}
+        <motion.div 
+          animate={{ backgroundPositionY: ['0px', '40px'] }}
+          transition={{ repeat: Infinity, duration: 1.8, ease: 'linear' }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: `
+              linear-gradient(rgba(0, 255, 255, 0.02) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0, 255, 255, 0.02) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px',
+            zIndex: 1,
+            pointerEvents: 'none',
+            opacity: 0.8
+          }}
         />
 
         {/* Faint Retro CRT Scanline Overlay */}
