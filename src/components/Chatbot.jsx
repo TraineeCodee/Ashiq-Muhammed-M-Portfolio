@@ -165,7 +165,37 @@ const Chatbot = () => {
             WebkitBackdropFilter: 'blur(10px)'
           }}
         >
-          {isOpen ? <X size={26} /> : <MessageSquare size={26} />}
+          {isOpen ? (
+            <X size={26} />
+          ) : (
+            <div style={{ position: 'relative', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {/* Spinning loading indicator ring */}
+              <motion.div
+                style={{
+                  position: 'absolute',
+                  inset: '-6px',
+                  borderRadius: '50%',
+                  border: '2px dashed #00FFFF',
+                  opacity: 0.8
+                }}
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 4, ease: 'linear' }}
+              />
+              {/* Cyber Spider Vector Icon */}
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00FFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ filter: 'drop-shadow(0 0 5px rgba(0, 255, 255, 0.6))' }}>
+                <circle cx="12" cy="13" r="3" />
+                <circle cx="12" cy="8" r="2" />
+                <circle cx="12" cy="4" r="1" />
+                {/* Legs */}
+                <path d="M10 8a5 5 0 0 0-6-3" />
+                <path d="M9 11a6 6 0 0 0-6 3" />
+                <path d="M9 14a6 6 0 0 0-5 5" />
+                <path d="M14 8a5 5 0 0 1 6-3" />
+                <path d="M15 11a6 6 0 0 1 6 3" />
+                <path d="M15 14a6 6 0 0 1 5 5" />
+              </svg>
+            </div>
+          )}
         </motion.button>
       </div>
 
