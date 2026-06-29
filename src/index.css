@@ -114,11 +114,26 @@ button {
     left: 1.5rem;
   }
   
+  .chatbot-trigger-container button {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .chatbot-trigger-container svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .chatbot-trigger-container div {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
   .chatbot-panel {
     bottom: 5.5rem;
     left: 1rem;
     width: calc(100vw - 2rem) !important;
-    height: 450px !important;
+    height: 420px !important; /* More compact for mobile screen height */
     background: #09090f !important; /* Solid dark background to prevent bleed-through */
     border: 1px solid rgba(0, 255, 255, 0.4) !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important;
@@ -128,42 +143,90 @@ button {
   .chatbot-header {
     background: rgba(0, 255, 255, 0.12) !important;
     border-bottom: 1px solid rgba(0, 255, 255, 0.25) !important;
+    padding: 0.8rem 1rem !important; /* More compact header padding */
+  }
+
+  .chatbot-header h4 {
+    font-size: 1rem !important; /* Proportional text sizes */
+  }
+
+  .chatbot-header span {
+    font-size: 0.68rem !important;
+  }
+
+  .chatbot-header svg {
+    width: 18px !important;
+    height: 18px !important;
   }
 
   /* Solid dark background behind messages */
   .chatbot-messages-container {
     background: #050507 !important;
+    padding: 0.9rem !important; /* Compact bubble space */
+    gap: 0.7rem !important; /* Less vertical distance */
   }
 
   /* High contrast text for messages */
+  .chat-bubble {
+    padding: 0.6rem 0.8rem !important; /* Scaled down padding */
+    font-size: 0.82rem !important; /* More readable wrap size */
+    line-height: 1.4 !important;
+  }
+
   .chat-bubble-bot {
     background: rgba(255, 255, 255, 0.08) !important;
     border: 1px solid rgba(255, 255, 255, 0.18) !important;
     color: #ffffff !important; /* Pure white text for reading ease */
+    border-radius: 12px 12px 12px 2px !important; /* Proportional border-radius */
   }
 
   .chat-bubble-user {
     background: rgba(0, 255, 255, 0.22) !important;
     border: 1px solid rgba(0, 255, 255, 0.5) !important;
     color: #ffffff !important;
+    border-radius: 12px 12px 2px 12px !important;
   }
 
   /* RPG dialogue choices */
   .chatbot-chips-container {
     background: #09090f !important;
     border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding: 0.4rem 0.8rem !important; /* Compact chips area */
+    gap: 0.35rem !important;
   }
 
   .chatbot-chip {
     background: rgba(0, 255, 255, 0.06) !important;
     border: 1px solid rgba(0, 255, 255, 0.25) !important;
     color: #00FFFF !important; /* Clear cyan text */
+    padding: 0.35rem 0.75rem !important; /* Compact buttons */
+    font-size: 0.72rem !important;
+    font-weight: 500 !important;
   }
 
   /* Input bar container */
   .chatbot-input-form {
     background: #09090f !important;
     border-top: 1px solid rgba(0, 255, 255, 0.25) !important;
+    padding: 0.8rem !important; /* Compact input box padding */
+    gap: 0.5rem !important;
+  }
+
+  .chatbot-input-form input {
+    padding: 0.5rem 0.8rem !important;
+    font-size: 0.82rem !important;
+    border-radius: 10px !important;
+  }
+
+  .chatbot-input-form button {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 10px !important;
+  }
+
+  .chatbot-input-form svg {
+    width: 14px !important;
+    height: 14px !important;
   }
 }
 
