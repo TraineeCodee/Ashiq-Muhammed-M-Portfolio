@@ -414,7 +414,7 @@ const Chatbot = () => {
             }}
           >
             {/* Header */}
-            <div style={{
+            <div className="chatbot-header" style={{
               padding: '1.2rem',
               background: 'rgba(0, 255, 255, 0.05)',
               borderBottom: '1px solid rgba(0, 255, 255, 0.1)',
@@ -438,7 +438,7 @@ const Chatbot = () => {
             </div>
 
             {/* Chat Messages */}
-            <div style={{
+            <div className="chatbot-messages-container" style={{
               flex: 1,
               padding: '1.2rem',
               overflowY: 'auto',
@@ -450,6 +450,7 @@ const Chatbot = () => {
               {messages.map((msg) => (
                 <div 
                   key={msg.id}
+                  className={`chat-bubble chat-bubble-${msg.sender}`}
                   style={{
                     alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
                     maxWidth: '85%',
@@ -482,7 +483,7 @@ const Chatbot = () => {
             </div>
 
             {/* Dynamic RPG Dialogue Chips */}
-            <div style={{
+            <div className="chatbot-chips-container" style={{
               padding: '0.6rem 1rem',
               display: 'flex',
               flexWrap: 'wrap',
@@ -494,6 +495,7 @@ const Chatbot = () => {
                 <button
                   key={idx}
                   onClick={() => handleMenuClick(q)}
+                  className="chatbot-chip"
                   style={{
                     background: 'rgba(255, 255, 255, 0.03)',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -526,6 +528,7 @@ const Chatbot = () => {
             {/* Input Bar */}
             <form 
               onSubmit={handleCustomSend}
+              className="chatbot-input-form"
               style={{
                 padding: '1rem',
                 borderTop: '1px solid rgba(0, 255, 255, 0.1)',

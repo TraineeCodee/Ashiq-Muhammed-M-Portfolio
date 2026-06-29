@@ -113,11 +113,58 @@ button {
     bottom: 1.5rem;
     left: 1.5rem;
   }
+  
   .chatbot-panel {
     bottom: 5.5rem;
     left: 1rem;
-    width: calc(100vw - 2rem);
-    height: 450px;
+    width: calc(100vw - 2rem) !important;
+    height: 450px !important;
+    background: #09090f !important; /* Solid dark background to prevent bleed-through */
+    border: 1px solid rgba(0, 255, 255, 0.4) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important;
+  }
+
+  /* Make header distinct and opaque */
+  .chatbot-header {
+    background: rgba(0, 255, 255, 0.12) !important;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.25) !important;
+  }
+
+  /* Solid dark background behind messages */
+  .chatbot-messages-container {
+    background: #050507 !important;
+  }
+
+  /* High contrast text for messages */
+  .chat-bubble-bot {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    color: #ffffff !important; /* Pure white text for reading ease */
+  }
+
+  .chat-bubble-user {
+    background: rgba(0, 255, 255, 0.22) !important;
+    border: 1px solid rgba(0, 255, 255, 0.5) !important;
+    color: #ffffff !important;
+  }
+
+  /* RPG dialogue choices */
+  .chatbot-chips-container {
+    background: #09090f !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .chatbot-chip {
+    background: rgba(0, 255, 255, 0.06) !important;
+    border: 1px solid rgba(0, 255, 255, 0.25) !important;
+    color: #00FFFF !important; /* Clear cyan text */
+  }
+
+  /* Input bar container */
+  .chatbot-input-form {
+    background: #09090f !important;
+    border-top: 1px solid rgba(0, 255, 255, 0.25) !important;
   }
 }
+
 
