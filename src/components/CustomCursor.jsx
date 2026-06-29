@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Gamepad2, Sparkles, Trophy } from 'lucide-react';
+import { playGem, playHover, playLevelUp, playClick } from '../utils/audioManager';
+
 
 const CustomCursor = () => {
   const [position, setPosition] = useState({ x: -100, y: -100 });
@@ -64,6 +66,7 @@ const CustomCursor = () => {
         needed = getXpNeeded(newLevel);
         // Level up popup
         triggerPopup(`Level Up! ${getLevelName(newLevel)}`, position.x, position.y - 40, '#00FFFF');
+        playLevelUp();
       }
 
       setLevel(newLevel);
@@ -188,6 +191,8 @@ const CustomCursor = () => {
   // Hook hover rewards to elements
   useEffect(() => {
     const handleElementHover = (e) => {
+      if (isTouch) return;
+      playHover();
       // Combo multiplier on hovers
       setCombo((c) => {
         const nextCombo = c + 1;
@@ -207,7 +212,7 @@ const CustomCursor = () => {
     };
 
     // Attach listener to interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, .glass, .skills-card');
+    const interactiveElements = document.querySelectorAll('a, button, .glass:not(.no-hover-xp), .skills-card:not(.no-hover-xp)');
     interactiveElements.forEach((el) => {
       el.addEventListener('mouseenter', handleElementHover);
     });
@@ -218,6 +223,18 @@ const CustomCursor = () => {
       });
     };
   }, [position]);
+
+  // Global click sound handler for interactive elements
+  useEffect(() => {
+    const handleGlobalClick = (e) => {
+      const target = e.target;
+      if (target && target.closest && target.closest('a, button, [role="button"], input, select, textarea, summary, .skills-card')) {
+        playClick();
+      }
+    };
+    window.addEventListener('click', handleGlobalClick);
+    return () => window.removeEventListener('click', handleGlobalClick);
+  }, []);
 
   // Main game animation loop (trail fading & gem magnetic attraction)
   useEffect(() => {
@@ -265,6 +282,7 @@ const CustomCursor = () => {
               // Particle burst on collect
               spawnBurst(gem.x, gem.y, gem.color);
               addXp(20, 'Gem Collected! +20 XP');
+              playGem();
               return false; // delete gem
             }
             return true;
@@ -312,9 +330,8 @@ const CustomCursor = () => {
         `}</style>
       )}
 
-      {/* 1. Gaming HUD display in bottom-right corner */}
       <div 
-        className="glass" 
+        className="glass no-hover-xp" 
         style={{
           position: 'fixed',
           bottom: '2rem',

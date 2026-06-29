@@ -201,7 +201,7 @@ const Details = () => {
                 }} 
               />
 
-              <div className="glass" style={{
+              <div className="glass no-hover-xp" style={{
                 width: '100%',
                 height: '100%',
                 borderRadius: '24px',
@@ -334,7 +334,7 @@ const Details = () => {
                   {/* Skill 8 */}
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginBottom: '0.1rem' }}>
-                      <span style={{ color: '#dfdfdf' }}>📢 Comm</span>
+                      <span style={{ color: '#dfdfdf' }}>📢 Communication</span>
                       <span style={{ color: '#FF00FF', fontWeight: 700 }}>90%</span>
                     </div>
                     <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>

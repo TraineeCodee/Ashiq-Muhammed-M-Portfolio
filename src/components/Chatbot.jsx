@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, X, Send, Award, ArrowLeft, HelpCircle } from 'lucide-react';
+import { playMessage, playClick } from '../utils/audioManager';
+
+
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,6 +61,7 @@ const Chatbot = () => {
 
   // Helper: Simulated Streaming Text
   const streamBotResponse = (fullText) => {
+    playMessage();
     // Add temporary typing state
     setMessages((prev) => [
       ...prev,
@@ -315,6 +319,7 @@ const Chatbot = () => {
   const handleCustomSend = (e) => {
     e.preventDefault();
     if (!inputText.trim()) return;
+    playClick();
 
     const userText = inputText;
     const userMsg = {
@@ -333,15 +338,7 @@ const Chatbot = () => {
   return (
     <>
       {/* 1. Chatbot Floating Bubble Button */}
-      <div 
-        style={{
-          position: 'fixed',
-          bottom: '2rem',
-          left: '2rem',
-          zIndex: 9999,
-          pointerEvents: 'auto'
-        }}
-      >
+      <div className="chatbot-trigger-container">
         <motion.button
           onClick={() => setIsOpen(!isOpen)}
           whileHover={{ scale: 1.1, boxShadow: '0 0 20px rgba(0, 255, 255, 0.4)' }}
@@ -403,13 +400,8 @@ const Chatbot = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 260, damping: 25 }}
-            className="glass"
+            className="glass chatbot-panel"
             style={{
-              position: 'fixed',
-              bottom: '6.5rem',
-              left: '2rem',
-              width: '360px',
-              height: '500px',
               zIndex: 9998,
               borderRadius: '24px',
               display: 'flex',

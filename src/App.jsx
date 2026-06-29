@@ -12,7 +12,9 @@ import Navigation from './components/Navigation';
 import Chatbot from './components/Chatbot';
 import { Mail, Phone, AtSign, Code, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { playCoin, playStart } from './utils/audioManager';
 import './index.css';
+
 
 function App() {
   const [progress, setProgress] = useState(0);
@@ -75,6 +77,7 @@ function App() {
   }, [isStarted]);
 
   const handleCoinClick = (coinId, coinXp) => {
+    playCoin();
     setCoins((prev) => prev.filter((c) => c.id !== coinId));
     setCoinsCollected((prev) => prev + 1);
     setProgress((p) => Math.min(100, p + 12)); // Boosts loading speed by 12% per coin!
@@ -315,7 +318,10 @@ function App() {
               scale: { repeat: Infinity, duration: 1.5, ease: 'easeInOut' },
               opacity: { duration: 0.4 }
             }}
-            onClick={() => setIsStarted(true)}
+            onClick={() => {
+              playStart();
+              setIsStarted(true);
+            }}
             style={{
               background: 'rgba(0, 255, 255, 0.1)',
               border: '1px solid #00FFFF',

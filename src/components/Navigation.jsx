@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Volume2, VolumeX } from 'lucide-react';
+import { isMuted, toggleMute } from '../utils/audioManager';
 
 const navLinks = [
   { name: 'Home', href: '#home' },
@@ -14,6 +15,7 @@ const navLinks = [
 const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [muted, setMuted] = useState(isMuted());
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,6 +25,20 @@ const Navigation = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const handleMuteToggle = (e) => {
+      setMuted(e.detail.isMuted);
+    };
+    window.addEventListener('mute_toggle', handleMuteToggle);
+    return () => window.removeEventListener('mute_toggle', handleMuteToggle);
+  }, []);
+
+  const handleVolumeClick = (e) => {
+    e.stopPropagation();
+    const newState = toggleMute();
+    setMuted(newState);
+  };
 
   return (
     <>
@@ -51,6 +67,10 @@ const Navigation = () => {
           box-shadow: 0 10px 30px rgba(0,0,0,0.5);
           border: 1px solid rgba(0, 255, 255, 0.1);
           align-items: center;
+        }
+
+        .mobile-nav-header {
+          display: none;
         }
 
         .hamburger-btn {
@@ -91,6 +111,12 @@ const Navigation = () => {
             overflow: hidden;
           }
 
+          .mobile-nav-header {
+            display: flex !important;
+            gap: 1rem;
+            align-items: center;
+          }
+
           .hamburger-btn {
             display: flex;
           }
@@ -116,12 +142,30 @@ const Navigation = () => {
         className="nav-container"
       >
         <div className="nav-glass">
-          <button
-            className="hamburger-btn"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X size={28} color="#00FFFF" /> : <Menu size={28} color="#00FFFF" />}
-          </button>
+          <div className="mobile-nav-header">
+            <button
+              onClick={handleVolumeClick}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0.25rem',
+                cursor: 'none',
+              }}
+              aria-label="Toggle mute"
+            >
+              {muted ? <VolumeX size={24} color="#FF00FF" /> : <Volume2 size={24} color="#00FFFF" />}
+            </button>
+            <button
+              className="hamburger-btn"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X size={28} color="#00FFFF" /> : <Menu size={28} color="#00FFFF" />}
+            </button>
+          </div>
 
           <div className="nav-links-desktop">
             {navLinks.map((link) => (
@@ -148,6 +192,32 @@ const Navigation = () => {
                 {link.name}
               </a>
             ))}
+            <button
+              onClick={handleVolumeClick}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0.25rem',
+                marginLeft: '1rem',
+                cursor: 'none',
+                transition: 'all 0.3s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#00FFFF';
+                e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(0,255,255,0.5))';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.filter = 'none';
+              }}
+              aria-label="Toggle mute"
+            >
+              {muted ? <VolumeX size={20} color="#FF00FF" /> : <Volume2 size={20} color="#00FFFF" />}
+            </button>
           </div>
 
           <AnimatePresence>
