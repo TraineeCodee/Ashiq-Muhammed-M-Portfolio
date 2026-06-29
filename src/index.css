@@ -169,7 +169,7 @@ button {
   /* High contrast text for messages */
   .chat-bubble {
     padding: 0.6rem 0.8rem !important; /* Scaled down padding */
-    font-size: 0.82rem !important; /* More readable wrap size */
+    font-size: 0.78rem !important; /* More readable wrap size */
     line-height: 1.4 !important;
   }
 
@@ -322,6 +322,31 @@ button {
   .showcase-card ul {
     font-size: 1rem;
     line-height: 1.6;
+  }
+}
+
+/* Global Mobile Text Optimization Overrides */
+@media (max-width: 768px) {
+  /* Scale down all section headers on mobile */
+  section h2 {
+    font-size: 2rem !important;
+  }
+
+  /* Scale down card/role headings on mobile */
+  .glass h3 {
+    font-size: 1.35rem !important;
+  }
+
+  /* Scale down descriptions and body text inside sections and cards */
+  section p, .glass p {
+    font-size: 0.95rem !important;
+    line-height: 1.55 !important;
+  }
+
+  /* Scale down list items inside sections */
+  section li {
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
   }
 }
 
