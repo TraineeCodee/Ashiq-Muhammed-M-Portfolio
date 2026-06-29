@@ -362,9 +362,10 @@ const Chatbot = () => {
           {isOpen ? (
             <X size={26} />
           ) : (
-            <div style={{ position: 'relative', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div className="chatbot-icon-wrapper" style={{ position: 'relative', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {/* Spinning loading indicator ring */}
               <motion.div
+                className="chatbot-spinner-ring"
                 style={{
                   position: 'absolute',
                   inset: '-6px',
