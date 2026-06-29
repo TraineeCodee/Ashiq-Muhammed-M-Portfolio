@@ -230,4 +230,99 @@ button {
   }
 }
 
+/* Project Showcase Styles */
+.showcase-section {
+  min-height: 100vh;
+  padding: 6rem 2rem;
+  position: relative;
+  background: transparent;
+}
+
+.showcase-title {
+  font-size: 3rem;
+  color: #ffffff;
+  letter-spacing: -1px;
+}
+
+.showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.showcase-card {
+  padding: 3rem;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.showcase-card svg {
+  margin-bottom: 2rem !important;
+  width: 50px !important;
+  height: 50px !important;
+}
+
+.showcase-card h3 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.showcase-card p {
+  color: #a0a0a0;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.showcase-card ul {
+  color: #a0a0a0;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  list-style: none;
+}
+
+/* Mobile responsive adjustments for Showcase */
+@media (max-width: 768px) {
+  .showcase-section {
+    padding: 4rem 1.5rem;
+  }
+
+  .showcase-title {
+    font-size: 2.2rem;
+  }
+
+  .showcase-grid {
+    grid-template-columns: 1fr; /* Stack vertically on mobile */
+    gap: 1.5rem;
+  }
+
+  .showcase-card {
+    padding: 1.8rem 1.5rem; /* more compact padding */
+  }
+
+  .showcase-card svg {
+    margin-bottom: 1rem !important;
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .showcase-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .showcase-card p {
+    font-size: 1rem;
+  }
+
+  .showcase-card ul {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+}
+
 
