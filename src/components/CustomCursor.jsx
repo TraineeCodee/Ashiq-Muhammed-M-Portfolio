@@ -131,14 +131,19 @@ const CustomCursor = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Mouse Move & Touch Move tracking & Particle Spawning
   useEffect(() => {
     const handleMove = (x, y) => {
       setPosition({ x, y });
 
+      if (isTouch) {
+        // Optimize mobile: do not spawn particles or update state on swipe/touch move
+        lastPos.current = { x, y };
+        return;
+      }
+
       // Spawn trail particle if pointer moves far enough
       const dist = Math.hypot(x - lastPos.current.x, y - lastPos.current.y);
-      const minDistance = isTouch ? 25 : 20; // higher distance threshold on touch
+      const minDistance = 20;
       
       if (dist > minDistance) {
         const id = Math.random();
@@ -147,15 +152,15 @@ const CustomCursor = () => {
           x,
           y,
           color: Math.random() > 0.5 ? '#00FFFF' : '#FF00FF',
-          size: Math.random() * (isTouch ? 5 : 6) + 3,
-          maxLife: isTouch ? 18 : 25, // shorter life on touch to save CPU
-          life: isTouch ? 18 : 25
+          size: 6,
+          maxLife: 25,
+          life: 25
         };
-        setParticles((prev) => [...prev.slice(isTouch ? -12 : -25), p]); // cap lower on touch
+        setParticles((prev) => [...prev.slice(-25), p]);
         lastPos.current = { x, y };
 
-        // Award trace points for exploring (rarely, to keep game feel balanced)
-        if (Math.random() > (isTouch ? 0.97 : 0.95)) {
+        // Award trace points for exploring
+        if (Math.random() > 0.95) {
           addXp(1, '+1 Move XP');
         }
       }
@@ -239,15 +244,17 @@ const CustomCursor = () => {
   // Main game animation loop (trail fading & gem magnetic attraction)
   useEffect(() => {
     const updateLoop = () => {
-      // 1. Fade particles
-      setParticles((prev) =>
-        prev
+      // 1. Fade particles (only if they exist)
+      setParticles((prev) => {
+        if (prev.length === 0) return prev;
+        return prev
           .map((p) => ({ ...p, life: p.life - 1 }))
-          .filter((p) => p.life > 0)
-      );
+          .filter((p) => p.life > 0);
+      });
 
       // 2. Magnetic collection logic for Gems
       setGems((prev) => {
+        if (prev.length === 0) return prev;
         return prev
           .map((gem) => {
             const dx = position.x - gem.x;

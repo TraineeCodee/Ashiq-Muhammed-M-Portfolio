@@ -79,8 +79,8 @@ const InteractiveBackground = () => {
     window.addEventListener('resize', resizeCanvas);
 
     // Particle Setup
-    // Cap count lower on mobile to save CPU/battery
-    const maxParticles = isMobile ? 32 : 65;
+    // Cap count lower on mobile to save CPU/battery (N^2 mesh links calculation)
+    const maxParticles = isMobile ? 12 : 65;
     const particles = [];
 
     for (let i = 0; i < maxParticles; i++) {
